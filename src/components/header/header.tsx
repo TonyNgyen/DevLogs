@@ -53,9 +53,9 @@ function Header() {
         )}
       </div>
       {ideaPopUp && (
-        <div className="w-[90vw] h-[50vh] bg-white rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3">
+        <div className="w-[90vw] h-[45vh] bg-white rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3">
           <div
-            className="w-[90vw] h-[50vh] rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 p-[15px]"
+            className="w-[90vw] h-[45vh] rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 p-[15px]"
             style={{
               background: `#${selectedColor}80`,
               border: `solid #${
@@ -77,7 +77,7 @@ function Header() {
               </button>
             </div>
 
-            <form className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-2xl font-semibold">Idea Name</label>
                 <input
@@ -87,7 +87,7 @@ function Header() {
                   className="px-3 py-2 rounded-lg border-[3px] border-black text-xl"
                 />
               </div>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 h-36">
                 <h2 className="text-2xl font-semibold">Pick a Color</h2>
                 <div
                   className={`w-[50px] h-[50px] rounded-lg bg-white ${
@@ -143,6 +143,7 @@ function Header() {
                           setShowColors(false);
                           setSelectedColor(color);
                         }}
+                        key={color}
                       >
                         <div
                           className="w-[50px] h-[50px] rounded-lg"
@@ -168,7 +169,8 @@ function Header() {
                   )}
                 </div>
               </div>
-            </form>
+              <button className="bg-green-500 p-2 rounded-lg text-white text-xl font-bold border-green-700 border-[3px]" >Add Idea</button>
+            </div>
           </div>
         </div>
       )}
