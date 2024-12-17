@@ -2,7 +2,7 @@ import React from "react";
 import IdeaCard from "../ideaCard/ideaCard";
 
 const ideas = [
-  { name: "Idea Name", dateCreated: "12/15/2024", color: "F0A0A0", notes: [] },
+  { name: "Idea Name", dateCreated: "12/15/2024", color: "FF9090", notes: [] },
   { name: "Idea Name", dateCreated: "12/15/2024", color: "CCA8FF", notes: [] },
 ];
 
