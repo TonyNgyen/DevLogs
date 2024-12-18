@@ -19,6 +19,7 @@ interface Note {
 }
 
 interface Idea {
+  id: string;
   name: string;
   dateCreated: string;
   color?: string;
@@ -28,15 +29,10 @@ interface Idea {
 function CardContainer() {
   const [ideas, setIdeas] = useState<Idea[] | null>();
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "ideas"),
-      (snapshot) => {
-        const ideaArray: Idea[] = snapshot.docs.map(
-          (doc) => doc.data() as Idea
-        );
-        setIdeas(ideaArray);
-      }
-    );
+    const unsubscribe = onSnapshot(collection(db, "ideas"), (snapshot) => {
+      const ideaArray: Idea[] = snapshot.docs.map((doc) => doc.data() as Idea);
+      setIdeas(ideaArray);
+    });
     return () => unsubscribe();
   }, []);
   return (

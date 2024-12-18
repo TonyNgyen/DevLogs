@@ -10,7 +10,8 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "@/app/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { makeid } from "@/lib/utils";
 
 function Header() {
   const colorOptions = [
@@ -33,13 +34,25 @@ function Header() {
   const addIdea = async () => {
     try {
       const date = format(new Date(), "P");
-      const docRef = await addDoc(collection(db, "ideas"), {
+      // const docRef = await addDoc(collection(db, "ideas"), {
+      //   name: ideaName,
+      //   color: selectedColor,
+      //   dateCreated: date,
+      //   notes: [],
+      // });
+      const docId = makeid();
+      const docRef = doc(db, "ideas", docId);
+      await setDoc(docRef, {
+        id: docId,
         name: ideaName,
         color: selectedColor,
         dateCreated: date,
         notes: [],
       });
-    } catch (error) {}
+      console.log(`Document created with ID: ${docId}`);
+    } catch (error) {
+      console.error("Error creating document: ", error);
+    }
   };
 
   const coloredBorder = `solid #${
@@ -105,7 +118,7 @@ function Header() {
                   type="text"
                   name="ideaName"
                   placeholder="Name"
-                  className="px-3 py-2 rounded-lg border-[3px] border-black text-xl"
+                  className="px-3 py-2 rounded-lg border-[3px] border-black text-2xl font-bold"
                   onChange={(e) => setIdeaName(e.target.value)}
                 />
               </div>

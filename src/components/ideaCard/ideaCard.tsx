@@ -1,8 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { PiPlusCircleBold, PiCheckCircleBold } from "react-icons/pi";
+import {
+  PiPlusCircleBold,
+  PiCheckCircleBold,
+  PiXCircleBold,
+} from "react-icons/pi";
 import { FaCheck } from "react-icons/fa";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/app/firebase";
+import { makeid } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface Note {
   id: number;
@@ -13,6 +21,7 @@ interface Note {
 }
 
 interface Idea {
+  id: string;
   name: string;
   dateCreated: string;
   color?: string;
@@ -22,9 +31,38 @@ interface Idea {
 function IdeaCard({ idea }: { idea: Idea }) {
   const [addMode, setAddMode] = useState(false);
   const [noteContent, setNoteContent] = useState("");
+  const [emptyNoteError, setEmptyNoteError] = useState(false);
   const [importance, setImportance] = useState(2);
   const importanceStyles =
     "w-1/3 h-[30px] flex justify-center items-center font-semibold text-lg bg-gray-200 border-2 border-black";
+
+  const addNote = async () => {
+    try {
+      if (noteContent == "") {
+        setEmptyNoteError(true);
+        return;
+      }
+      const noteId = makeid();
+      const date = format(new Date(), "P");
+      const docRef = doc(db, "ideas", idea.id);
+      await updateDoc(docRef, {
+        notes: arrayUnion({
+          id: noteId,
+          content: noteContent,
+          dateCreated: date,
+          importance: importance,
+          subnotes: [],
+        }),
+      });
+      console.log("Value successfully added to array!");
+      setImportance(2);
+      setNoteContent("");
+      setAddMode(false);
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };
+
   return (
     <div
       className={`w-full h-[250px] p-[15px] rounded-[20px]`}
@@ -33,17 +71,32 @@ function IdeaCard({ idea }: { idea: Idea }) {
         border: `solid #${idea.color} 4px`,
       }}
     >
-      <div className="flex justify-between items-center h-1/5 mb-4">
+      <div className="flex justify-between items-center h-1/5 mb-4 ">
         <h1 className="text-3xl font-bold">
           {addMode ? "New Note?" : idea.name}
         </h1>
         {addMode ? (
-          <button
-            className="text-5xl text-green-600"
-            onClick={() => setAddMode(false)}
-          >
-            <PiCheckCircleBold />
-          </button>
+          <div className="flex">
+            <button
+              className="text-5xl text-red-600"
+              onClick={() => {
+                setImportance(2);
+                setNoteContent("");
+                setAddMode(false);
+                setEmptyNoteError(false);
+              }}
+            >
+              <PiXCircleBold />
+            </button>{" "}
+            <button
+              className="text-5xl text-green-600 "
+              onClick={() => {
+                addNote();
+              }}
+            >
+              <PiCheckCircleBold />
+            </button>
+          </div>
         ) : (
           <button className="text-5xl" onClick={() => setAddMode(true)}>
             <PiPlusCircleBold />
@@ -55,10 +108,21 @@ function IdeaCard({ idea }: { idea: Idea }) {
           <form>
             <textarea
               rows={2}
-              className="border-[2px] rounded-lg border-black p-3 w-full font-bold text-lg"
-              placeholder="What's your new note?"
+              className={`border-[2px] rounded-lg p-3 w-full font-bold text-lg ${
+                emptyNoteError
+                  ? " border-red-600 placeholder-red-600"
+                  : " border-black "
+              }`}
+              placeholder={`${
+                emptyNoteError
+                  ? "Please write a new note!"
+                  : "What's your new note?"
+              }`}
               value={noteContent}
-              onChange={(e) => setNoteContent(e.target.value)}
+              onChange={(e) => {
+                setNoteContent(e.target.value);
+                setEmptyNoteError(false);
+              }}
             />
 
             <h2 className="text-2xl font-semibold">Importance</h2>
