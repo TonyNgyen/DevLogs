@@ -7,9 +7,9 @@ import {
   PiXCircleBold,
 } from "react-icons/pi";
 import { FaCheck } from "react-icons/fa";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/app/firebase";
-import { makeid } from "@/lib/utils";
+import { makeid, toGrayscale } from "@/lib/utils";
 import { format } from "date-fns";
 
 interface Note {
@@ -60,6 +60,18 @@ function IdeaCard({ idea }: { idea: Idea }) {
       setAddMode(false);
     } catch (error) {
       console.error("Error updating document: ", error);
+    }
+  };
+
+  const removeNote = async (noteToRemove: Note | null) => {
+    try {
+      const docRef = doc(db, "ideas", idea.id);
+      await updateDoc(docRef, {
+        notes: arrayRemove(noteToRemove),
+      });
+      console.log("Note removed successfully!");
+    } catch (error) {
+      console.error("Error removing note:", error);
     }
   };
 
@@ -167,9 +179,21 @@ function IdeaCard({ idea }: { idea: Idea }) {
             <div
               className="bg-white rounded-[10px] flex justify-between p-3 items-center"
               key={index}
+              style={{
+                borderLeft: `solid 4px ${
+                  note?.importance == 1
+                    ? ` #${toGrayscale(idea.color ?? "000000")} `
+                    : note?.importance == 2
+                    ? ` #${idea.color}BF `
+                    : ` #${idea.color}FF `
+                }`,
+              }}
             >
               <p className="font-semibold text-xl">{note?.content}</p>
-              <button className="text-2xl text-green-600">
+              <button
+                className="text-2xl text-green-600"
+                onClick={() => removeNote(note)}
+              >
                 <FaCheck />
               </button>
             </div>
