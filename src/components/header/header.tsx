@@ -3,6 +3,14 @@
 import React, { useState } from "react";
 import { PiPlusCircleBold } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
+import { format } from "date-fns";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, db } from "@/app/firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 function Header() {
   const colorOptions = [
@@ -20,6 +28,19 @@ function Header() {
   const [ideaPopUp, setIdeaPopup] = useState(false);
   const [showColors, setShowColors] = useState(false);
   const [selectedColor, setSelectedColor] = useState("FFFFFF");
+  const [ideaName, setIdeaName] = useState("");
+
+  const addIdea = async () => {
+    try {
+      const date = format(new Date(), "P");
+      const docRef = await addDoc(collection(db, "ideas"), {
+        name: ideaName,
+        color: selectedColor,
+        dateCreated: date,
+        notes: [],
+      });
+    } catch (error) {}
+  };
 
   const coloredBorder = `solid #${
     selectedColor == "FFFFFF" ? `000000` : selectedColor
@@ -85,6 +106,7 @@ function Header() {
                   name="ideaName"
                   placeholder="Name"
                   className="px-3 py-2 rounded-lg border-[3px] border-black text-xl"
+                  onChange={(e) => setIdeaName(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1 h-36">
@@ -155,6 +177,7 @@ function Header() {
                             setShowColors(false);
                             setSelectedColor(color);
                           }}
+                          key={color}
                         />
                       </div>
                     ) : (
@@ -164,12 +187,24 @@ function Header() {
                           setShowColors(false);
                           setSelectedColor(color);
                         }}
+                        key={color}
                       />
                     )
                   )}
                 </div>
               </div>
-              <button className="bg-green-500 p-2 rounded-lg text-white text-xl font-bold border-green-700 border-[3px]" >Add Idea</button>
+              <button
+                className="bg-green-500 p-2 rounded-lg text-white text-xl font-bold border-green-700 border-[3px]"
+                onClick={() => {
+                  addIdea();
+                  setIdeaPopup(false);
+                  setSelectedColor("FFFFFF");
+                  setShowColors(false);
+                  setIdeaName("");
+                }}
+              >
+                Add Idea
+              </button>
             </div>
           </div>
         </div>
