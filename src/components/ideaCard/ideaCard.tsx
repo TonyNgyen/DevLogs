@@ -8,7 +8,7 @@ import {
 } from "react-icons/pi";
 import { FaCheck } from "react-icons/fa";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { db } from "@/app/firebase";
+import { auth, db } from "@/app/firebase";
 import { makeid, toGrayscale } from "@/lib/utils";
 import { format } from "date-fns";
 
@@ -36,7 +36,12 @@ function IdeaCard({ idea }: { idea: Idea }) {
   const importanceStyles =
     "w-1/3 h-[30px] flex justify-center items-center font-semibold text-lg bg-gray-200 border-2 border-black";
 
+  const user = auth.currentUser;
+
   const addNote = async () => {
+    if (!user?.uid) {
+      return;
+    }
     try {
       if (noteContent == "") {
         setEmptyNoteError(true);
@@ -44,7 +49,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
       }
       const noteId = makeid();
       const date = format(new Date(), "P");
-      const docRef = doc(db, "ideas", idea.id);
+      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
       await updateDoc(docRef, {
         notes: arrayUnion({
           id: noteId,
@@ -64,8 +69,12 @@ function IdeaCard({ idea }: { idea: Idea }) {
   };
 
   const removeNote = async (noteToRemove: Note | null) => {
+    if (!user?.uid || !idea.id) {
+      console.error("User or idea ID is missing.");
+      return;
+    }
     try {
-      const docRef = doc(db, "ideas", idea.id);
+      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
       await updateDoc(docRef, {
         notes: arrayRemove(noteToRemove),
       });

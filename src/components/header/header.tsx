@@ -31,17 +31,16 @@ function Header() {
   const [selectedColor, setSelectedColor] = useState("FFFFFF");
   const [ideaName, setIdeaName] = useState("");
 
+  const user = auth.currentUser;
+
   const addIdea = async () => {
+    if (!user?.uid) {
+      return;
+    }
     try {
       const date = format(new Date(), "P");
-      // const docRef = await addDoc(collection(db, "ideas"), {
-      //   name: ideaName,
-      //   color: selectedColor,
-      //   dateCreated: date,
-      //   notes: [],
-      // });
       const docId = makeid();
-      const docRef = doc(db, "ideas", docId);
+      const docRef = doc(db, "users", user?.uid, "ideas", docId);
       await setDoc(docRef, {
         id: docId,
         name: ideaName,

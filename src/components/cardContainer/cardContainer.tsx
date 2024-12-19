@@ -3,12 +3,7 @@
 import React, { useEffect, useState } from "react";
 import IdeaCard from "../ideaCard/ideaCard";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
-import { db } from "@/app/firebase";
-
-// const ideas = [
-//   { name: "Idea Name", dateCreated: "12/15/2024", color: "FF9090", notes: [] },
-//   { name: "Idea Name", dateCreated: "12/15/2024", color: "CCA8FF", notes: [] },
-// ];
+import { auth, db } from "@/app/firebase";
 
 interface Note {
   id: number;
@@ -28,13 +23,22 @@ interface Idea {
 
 function CardContainer() {
   const [ideas, setIdeas] = useState<Idea[] | null>();
+  const user = auth.currentUser;
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "ideas"), (snapshot) => {
-      const ideaArray: Idea[] = snapshot.docs.map((doc) => doc.data() as Idea);
-      setIdeas(ideaArray);
-    });
+    if (!user?.uid) {
+      return;
+    }
+    const unsubscribe = onSnapshot(
+      collection(db, "users", user?.uid, "ideas"),
+      (snapshot) => {
+        const ideaArray: Idea[] = snapshot.docs.map(
+          (doc) => doc.data() as Idea
+        );
+        setIdeas(ideaArray);
+      }
+    );
     return () => unsubscribe();
-  }, []);
+  }, [user?.uid]);
   return (
     <div className="flex flex-col gap-3">
       {ideas != null &&
