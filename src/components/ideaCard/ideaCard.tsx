@@ -10,7 +10,13 @@ import {
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaGear } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "@/app/firebase";
 import { makeid, toGrayscale } from "@/lib/utils";
 import { format } from "date-fns";
@@ -128,6 +134,20 @@ function IdeaCard({ idea }: { idea: Idea }) {
       console.log("Idea color successfully changed!");
       setColorChange(false);
     } catch (error) {}
+  };
+
+  const deleteIdea = async () => {
+    if (!user?.uid || !idea.id) {
+      console.error("User or idea ID is missing.");
+      return;
+    }
+    try {
+      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
+      await deleteDoc(docRef);
+      console.log("Idea removed successfully!");
+    } catch (error) {
+      console.error("Error removing note:", error);
+    }
   };
 
   return (
@@ -295,7 +315,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                   <li
                     className="text-2xl text-right p-2 font-semibold text-red-600 hover:text-white hover:bg-red-600"
                     onClick={() => {
-                      setNameChange(true);
+                      deleteIdea();
                       setSettingsPopup(false);
                     }}
                   >
