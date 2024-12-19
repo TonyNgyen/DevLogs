@@ -118,7 +118,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
       console.log("Idea name successfully changed!");
       setNameChange(false);
     } catch (error) {
-      console.error("Error changing idea name:"), error;
+      console.error("Error changing idea name:",error);
     }
   };
 
@@ -134,7 +134,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
       console.log("Idea color successfully changed!");
       setColorChange(false);
     } catch (error) {
-      console.error("Error changing idea color:"), error;
+      console.error("Error changing idea color:", error);
     }
   };
 
