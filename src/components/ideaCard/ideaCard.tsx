@@ -117,7 +117,9 @@ function IdeaCard({ idea }: { idea: Idea }) {
       });
       console.log("Idea name successfully changed!");
       setNameChange(false);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error changing idea name:"), error;
+    }
   };
 
   const changeColor = async () => {
@@ -131,7 +133,9 @@ function IdeaCard({ idea }: { idea: Idea }) {
       });
       console.log("Idea color successfully changed!");
       setColorChange(false);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error changing idea color:"), error;
+    }
   };
 
   const deleteIdea = async () => {
@@ -144,7 +148,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
       await deleteDoc(docRef);
       console.log("Idea removed successfully!");
     } catch (error) {
-      console.error("Error removing note:", error);
+      console.error("Error removing idea:", error);
     }
   };
 

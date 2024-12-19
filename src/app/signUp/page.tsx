@@ -8,7 +8,6 @@ import { collection, doc, setDoc } from "firebase/firestore";
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,8 +23,8 @@ const SignUp: React.FC = () => {
       await setDoc(userRef, { createdAt: new Date() }, { merge: true });
       const settingsRef = doc(collection(userRef, "settings"));
       await setDoc(settingsRef, {});
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      console.error("Error signing up:", error);
     }
   };
 
@@ -46,7 +45,6 @@ const SignUp: React.FC = () => {
         required
       />
       <button type="submit">Sign Up</button>
-      {error && <p>{error}</p>}
     </form>
   );
 };
