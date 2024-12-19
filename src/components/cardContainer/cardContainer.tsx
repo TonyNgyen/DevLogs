@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import IdeaCard from "../ideaCard/ideaCard";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { auth, db } from "@/app/firebase";
 
 interface Note {

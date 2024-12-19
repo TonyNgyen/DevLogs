@@ -4,13 +4,8 @@ import React, { useState } from "react";
 import { PiPlusCircleBold } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
 import { format } from "date-fns";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 import { auth, db } from "@/app/firebase";
-import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { makeid } from "@/lib/utils";
 
 function Header() {
