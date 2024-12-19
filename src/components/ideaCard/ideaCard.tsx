@@ -5,7 +5,10 @@ import {
   PiPlusCircleBold,
   PiCheckCircleBold,
   PiXCircleBold,
+  PiGearBold,
 } from "react-icons/pi";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { FaGear } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/app/firebase";
@@ -30,13 +33,28 @@ interface Idea {
 
 function IdeaCard({ idea }: { idea: Idea }) {
   const [addMode, setAddMode] = useState(false);
+  const [settingsPopup, setSettingsPopup] = useState(false);
+  const [nameChange, setNameChange] = useState(false);
+  const [ideaName, setIdeaName] = useState(idea.name);
+  const [colorChange, setColorChange] = useState(false);
+  const [ideaColor, setIdeaColor] = useState(idea.color);
   const [noteContent, setNoteContent] = useState("");
   const [emptyNoteError, setEmptyNoteError] = useState(false);
   const [importance, setImportance] = useState(2);
+
   const importanceStyles =
     "w-1/3 h-[30px] flex justify-center items-center font-semibold text-lg bg-gray-200 border-2 border-black";
-
   const user = auth.currentUser;
+  const colorOptions = [
+    "FF7EA1",
+    "FF9090",
+    "FFA656",
+    "FFD55E",
+    "61CA68",
+    "7BC7FF",
+    "CCA8FF",
+    "FFFFFF",
+  ];
 
   const addNote = async () => {
     if (!user?.uid) {
@@ -84,18 +102,58 @@ function IdeaCard({ idea }: { idea: Idea }) {
     }
   };
 
+  const changeName = async () => {
+    if (!user?.uid) {
+      return;
+    }
+    try {
+      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
+      await updateDoc(docRef, {
+        name: ideaName,
+      });
+      console.log("Idea name successfully changed!");
+      setNameChange(false);
+    } catch (error) {}
+  };
+
+  const changeColor = async () => {
+    if (!user?.uid) {
+      return;
+    }
+    try {
+      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
+      await updateDoc(docRef, {
+        color: ideaColor,
+      });
+      console.log("Idea color successfully changed!");
+      setColorChange(false);
+    } catch (error) {}
+  };
+
   return (
     <div
       className={`w-full h-[250px] p-[15px] rounded-[20px]`}
       style={{
-        backgroundColor: `#${addMode ? `FFFFFF` : `${idea.color}80`}`,
-        border: `solid #${idea.color} 4px`,
+        backgroundColor: `#${addMode ? `FFFFFF` : `${ideaColor}80`}`,
+        border: `solid #${ideaColor} 4px`,
       }}
     >
       <div className="flex justify-between items-center h-1/5 mb-4 ">
-        <h1 className="text-3xl font-bold">
-          {addMode ? "New Note?" : idea.name}
-        </h1>
+        {nameChange ? (
+          <input
+            type="text"
+            name="ideaName"
+            placeholder="Idea Name"
+            className="text-3xl font-bold border-b-[3px] border-black w-1/2 bg-transparent"
+            value={ideaName}
+            onChange={(e) => setIdeaName(e.target.value)}
+          />
+        ) : (
+          <h1 className="text-3xl font-bold">
+            {addMode ? "New Note?" : idea.name}
+          </h1>
+        )}
+
         {addMode ? (
           <div className="flex">
             <button
@@ -108,7 +166,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
               }}
             >
               <PiXCircleBold />
-            </button>{" "}
+            </button>
             <button
               className="text-5xl text-green-600 "
               onClick={() => {
@@ -118,10 +176,142 @@ function IdeaCard({ idea }: { idea: Idea }) {
               <PiCheckCircleBold />
             </button>
           </div>
+        ) : nameChange ? (
+          <div className="flex gap-0">
+            <button
+              className="text-5xl text-red-600"
+              onClick={() => {
+                setNameChange(false);
+                setIdeaName(idea.name);
+              }}
+            >
+              <PiXCircleBold />
+            </button>
+            <button
+              className="text-5xl text-green-600 "
+              onClick={() => {
+                changeName();
+              }}
+            >
+              <PiCheckCircleBold />
+            </button>
+          </div>
+        ) : colorChange ? (
+          <div className="flex gap-0">
+            <div className="relative">
+              <button
+                className="text-5xl text-red-600"
+                onClick={() => {
+                  setColorChange(false);
+                  setIdeaColor(idea.color);
+                }}
+              >
+                <PiXCircleBold />
+              </button>
+              {colorChange && (
+                <div
+                  className="absolute bg-white w-44 right-0 top-[3.2rem] rounded-lg border-black border-[3px] z-20 grid grid-cols-3 grid-rows-3 gap-2 p-2"
+                  style={{ boxShadow: "4px 4px black" }}
+                >
+                  {colorOptions.map((color) =>
+                    color != "FFFFFF" ? (
+                      <div
+                        className="w-fill aspect-square rounded-lg"
+                        style={{
+                          backgroundColor: `white`,
+                        }}
+                        onClick={() => {
+                          setIdeaColor(color);
+                        }}
+                        key={color}
+                      >
+                        <div
+                          className="w-fill aspect-square rounded-lg"
+                          style={{
+                            backgroundColor: `#${color}80`,
+                            border: `solid #${color} 3px`,
+                          }}
+                          onClick={() => {
+                            setIdeaColor(color);
+                          }}
+                          key={color}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="w-fill aspect-square border-[3px] border-black rounded-lg bg-white"
+                        onClick={() => {
+                          setIdeaColor(color);
+                        }}
+                        key={color}
+                      />
+                    )
+                  )}
+                </div>
+              )}
+            </div>
+
+            <button
+              className="text-5xl text-green-600 "
+              onClick={() => {
+                changeColor();
+              }}
+            >
+              <PiCheckCircleBold />
+            </button>
+          </div>
         ) : (
-          <button className="text-5xl" onClick={() => setAddMode(true)}>
-            <PiPlusCircleBold />
-          </button>
+          <div className="flex gap-0">
+            <div className="relative">
+              <button
+                className="text-5xl flex justify-center items-center w-10 z-0"
+                onClick={() => setSettingsPopup(!settingsPopup)}
+              >
+                <BsThreeDotsVertical />
+              </button>
+              {settingsPopup && (
+                <ul
+                  className="absolute bg-white w-48 right-0 rounded-lg border-black border-[3px] z-20 overflow-hidden"
+                  style={{ boxShadow: "4px 4px black" }}
+                >
+                  <li
+                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black"
+                    onClick={() => {
+                      setNameChange(true);
+                      setSettingsPopup(false);
+                    }}
+                  >
+                    Change Name
+                  </li>
+                  <li
+                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black"
+                    onClick={() => {
+                      setColorChange(true);
+                      setSettingsPopup(false);
+                    }}
+                  >
+                    Change Color
+                  </li>
+                  <li
+                    className="text-2xl text-right p-2 font-semibold text-red-600 hover:text-white hover:bg-red-600"
+                    onClick={() => {
+                      setNameChange(true);
+                      setSettingsPopup(false);
+                    }}
+                  >
+                    Delete Idea
+                  </li>
+                </ul>
+              )}
+            </div>
+            {/* <button className="text-4xl ">
+            <FaGear />
+          </button> */}
+
+            <button className="text-5xl " onClick={() => setAddMode(true)}>
+              <PiPlusCircleBold />
+            </button>
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-[6px] overflow-y-auto h-[73%]">
@@ -152,7 +342,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 className={`${importanceStyles} rounded-l-lg`}
                 style={{
                   background:
-                    importance == 1 ? `#${idea.color}80` : "rgb(229 231 235)",
+                    importance == 1 ? `#${ideaColor}80` : "rgb(229 231 235)",
                   border: `${importance == 1 ? ` none ` : " solid 2px black "}`,
                 }}
                 onClick={() => setImportance(1)}
@@ -163,7 +353,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 className={`${importanceStyles} `}
                 style={{
                   background:
-                    importance == 2 ? `#${idea.color}BF` : "rgb(229 231 235)",
+                    importance == 2 ? `#${ideaColor}BF` : "rgb(229 231 235)",
                   border: `${importance == 2 ? ` none ` : "solid 2px black "}`,
                 }}
                 onClick={() => setImportance(2)}
@@ -174,7 +364,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 className={`${importanceStyles} rounded-r-lg`}
                 style={{
                   background:
-                    importance == 3 ? `#${idea.color}FF` : "rgb(229 231 235)",
+                    importance == 3 ? `#${ideaColor}FF` : "rgb(229 231 235)",
                   border: `${importance == 3 ? ` none ` : " solid 2px black "}`,
                 }}
                 onClick={() => setImportance(3)}
@@ -191,10 +381,10 @@ function IdeaCard({ idea }: { idea: Idea }) {
               style={{
                 borderLeft: `solid 4px ${
                   note?.importance == 1
-                    ? ` #${toGrayscale(idea.color ?? "000000")} `
+                    ? ` #${toGrayscale(ideaColor ?? "000000")} `
                     : note?.importance == 2
-                    ? ` #${idea.color}BF `
-                    : ` #${idea.color}FF `
+                    ? ` #${ideaColor}BF `
+                    : ` #${ideaColor}FF `
                 }`,
               }}
             >

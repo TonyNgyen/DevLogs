@@ -67,7 +67,7 @@ function Header() {
         </button>
         {addPopup && (
           <ul
-            className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px]"
+            className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
             style={{ boxShadow: "4px 4px black" }}
           >
             <li
