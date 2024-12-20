@@ -17,8 +17,8 @@ const Login = () => {
         password
       );
       console.log("User logged in:", userCredential.user);
-    } catch (error: any) {
-      console.error("Error logging in:", error.message);
+    } catch (error) {
+      console.error("Error logging in:", error);
     }
   };
 

@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "@/app/firebase";
-import { makeid, toGrayscale } from "@/lib/utils";
+import { makeid } from "@/lib/utils";
 
 interface Note {
   id: number;

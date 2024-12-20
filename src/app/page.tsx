@@ -8,7 +8,6 @@ import { auth } from "./firebase";
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null); // Store the user state
-  const [loading, setLoading] = useState<boolean>(true); // Loading state to show something while checking auth
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -17,7 +16,6 @@ export default function Home() {
       } else {
         setUser(null); // Set null if logged out
       }
-      setLoading(false); // Hide loading state once auth is checked
     });
 
     // Cleanup the listener on component unmount
