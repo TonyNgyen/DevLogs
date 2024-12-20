@@ -17,12 +17,10 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "@/app/firebase";
 import { makeid, toGrayscale } from "@/lib/utils";
-import { format } from "date-fns";
 
 interface Note {
   id: number;
   content: string;
-  dateCreated: string;
   importance: number;
   subnotes: Note[];
 }
@@ -30,7 +28,7 @@ interface Note {
 interface Idea {
   id: string;
   name: string;
-  dateCreated: string;
+  createdAt: string;
   color?: string;
   notes: (Note | null)[];
 }
@@ -70,13 +68,11 @@ function IdeaCard({ idea }: { idea: Idea }) {
         return;
       }
       const noteId = makeid();
-      const date = format(new Date(), "P");
       const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
       await updateDoc(docRef, {
         notes: arrayUnion({
           id: noteId,
           content: noteContent,
-          dateCreated: date,
           importance: importance,
           subnotes: [],
         }),
@@ -118,7 +114,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
       console.log("Idea name successfully changed!");
       setNameChange(false);
     } catch (error) {
-      console.error("Error changing idea name:",error);
+      console.error("Error changing idea name:", error);
     }
   };
 
@@ -152,15 +148,27 @@ function IdeaCard({ idea }: { idea: Idea }) {
     }
   };
 
+  const getBorderColor = (importance: number | undefined) => {
+    if (ideaColor?.toUpperCase() !== "FFFFFF") {
+      if (importance === 1) return `#BDBDBD`;
+      if (importance === 2) return `#${ideaColor}BF`;
+      return `#${ideaColor}FF`;
+    } else {
+      if (importance === 1) return "#E2E2E2";
+      if (importance === 2) return "#BDBDBD";
+      return "#9A9A9A";
+    }
+  };
+
   return (
     <div
-      className={`w-full h-[250px] p-[15px] rounded-[20px]`}
+      className={`w-full h-[280px] p-[15px] rounded-[20px] lg:w-fill lg:h-[347px]`}
       style={{
         backgroundColor: `#${addMode ? `FFFFFF` : `${ideaColor}80`}`,
-        border: `solid #${ideaColor} 4px`,
+        border: `solid #${ideaColor == "FFFFFF" ? "000000" : ideaColor} 4px`,
       }}
     >
-      <div className="flex justify-between items-center h-1/5 mb-4 ">
+      <div className="flex justify-between items-center mb-4 ">
         {nameChange ? (
           <input
             type="text"
@@ -220,7 +228,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
           </div>
         ) : colorChange ? (
           <div className="flex gap-0">
-            <div className="relative">
+            <div className="relative flex">
               <button
                 className="text-5xl text-red-600"
                 onClick={() => {
@@ -297,7 +305,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                   style={{ boxShadow: "4px 4px black" }}
                 >
                   <li
-                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black"
+                    className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
                     onClick={() => {
                       setNameChange(true);
                       setSettingsPopup(false);
@@ -306,7 +314,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                     Change Name
                   </li>
                   <li
-                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black"
+                    className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
                     onClick={() => {
                       setColorChange(true);
                       setSettingsPopup(false);
@@ -365,7 +373,13 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 style={{
                   background:
                     importance == 1 ? `#${ideaColor}80` : "rgb(229 231 235)",
-                  border: `${importance == 1 ? ` none ` : " solid 2px black "}`,
+                  border: `${
+                    ideaColor == "FFFFFF"
+                      ? " solid 2px black "
+                      : importance == 1
+                      ? ` none `
+                      : " solid 2px black "
+                  }`,
                 }}
                 onClick={() => setImportance(1)}
               >
@@ -376,7 +390,13 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 style={{
                   background:
                     importance == 2 ? `#${ideaColor}BF` : "rgb(229 231 235)",
-                  border: `${importance == 2 ? ` none ` : "solid 2px black "}`,
+                  border: `${
+                    ideaColor == "FFFFFF"
+                      ? " solid 2px black "
+                      : importance == 2
+                      ? ` none `
+                      : "solid 2px black "
+                  }`,
                 }}
                 onClick={() => setImportance(2)}
               >
@@ -387,7 +407,13 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 style={{
                   background:
                     importance == 3 ? `#${ideaColor}FF` : "rgb(229 231 235)",
-                  border: `${importance == 3 ? ` none ` : " solid 2px black "}`,
+                  border: `${
+                    ideaColor == "FFFFFF"
+                      ? " solid 2px black "
+                      : importance == 3
+                      ? ` none `
+                      : " solid 2px black "
+                  }`,
                 }}
                 onClick={() => setImportance(3)}
               >
@@ -396,18 +422,18 @@ function IdeaCard({ idea }: { idea: Idea }) {
             </div>
           </form>
         ) : (
-          idea.notes.map((note, index) => (
+          idea.notes.map((note) => (
             <div
               className="bg-white rounded-[10px] flex justify-between p-3 items-center"
-              key={index}
+              key={note?.id}
               style={{
-                borderLeft: `solid 4px ${
-                  note?.importance == 1
-                    ? ` #${toGrayscale(ideaColor ?? "000000")} `
-                    : note?.importance == 2
-                    ? ` #${ideaColor}BF `
-                    : ` #${ideaColor}FF `
-                }`,
+                borderLeft: `solid 4px ${getBorderColor(note?.importance)}`,
+                borderTop:
+                  ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
+                borderRight:
+                  ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
+                borderBottom:
+                  ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
               }}
             >
               <p className="font-semibold text-xl">{note?.content}</p>

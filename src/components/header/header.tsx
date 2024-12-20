@@ -3,9 +3,8 @@
 import React, { useState } from "react";
 import { PiPlusCircleBold } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
-import { format } from "date-fns";
 import { auth, db } from "@/app/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { makeid } from "@/lib/utils";
 
 function Header() {
@@ -33,14 +32,13 @@ function Header() {
       return;
     }
     try {
-      const date = format(new Date(), "P");
       const docId = makeid();
       const docRef = doc(db, "users", user?.uid, "ideas", docId);
       await setDoc(docRef, {
         id: docId,
         name: ideaName,
         color: selectedColor,
-        dateCreated: date,
+        createdAt: serverTimestamp(),
         notes: [],
       });
       console.log(`Document created with ID: ${docId}`);
@@ -81,7 +79,7 @@ function Header() {
         )}
       </div>
       {ideaPopUp && (
-        <div className="w-[90vw] h-[45vh] bg-white rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3">
+        <div className="w-[90vw] h-[45vh] bg-white rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 z-50">
           <div
             className="w-[90vw] h-[45vh] rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 p-[15px]"
             style={{
