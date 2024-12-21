@@ -79,9 +79,9 @@ function Header() {
         )}
       </div>
       {ideaPopUp && (
-        <div className="w-[90vw] h-[45vh] bg-white rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 z-50">
+        <div className="w-[90vw] min-h-[45vh] bg-white rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 z-40">
           <div
-            className="w-[90vw] h-[45vh] rounded-[20px] absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 p-[15px]"
+            className="w-[90vw] min-h-[45vh] rounded-[20px] p-[15px] z-50"
             style={{
               background: `#${selectedColor}80`,
               border: `solid #${
@@ -89,7 +89,7 @@ function Header() {
               } 5px`,
             }}
           >
-            <div className="flex justify-between  mb-5">
+            <div className="flex justify-between mb-5">
               <h1 className="text-4xl font-bold ">New Idea?</h1>
               <button
                 className="text-4xl self-start"
@@ -114,26 +114,33 @@ function Header() {
                   onChange={(e) => setIdeaName(e.target.value)}
                 />
               </div>
-              <div className="flex flex-col gap-1 h-36">
+              <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-semibold">Pick a Color</h2>
                 <div
-                  className={`w-[50px] h-[50px] rounded-lg bg-white ${
+                  className={`h-[108px] ${
                     !showColors ? " block " : " hidden "
                   }`}
                 >
                   <div
-                    className={`w-[50px] h-[50px] border-[3px] border-black rounded-lg ${
+                    className={`w-[50px] h-[50px] rounded-lg bg-white ${
                       !showColors ? " block " : " hidden "
                     }`}
-                    style={{
-                      backgroundColor: `#${selectedColor}80`,
-                      border: coloredBorder,
-                    }}
-                    onClick={() => setShowColors(true)}
-                  />
+                  >
+                    <div
+                      className={`w-[50px] h-[50px] border-[3px] border-black rounded-lg ${
+                        !showColors ? " block " : " hidden "
+                      }`}
+                      style={{
+                        backgroundColor: `#${selectedColor}80`,
+                        border: coloredBorder,
+                      }}
+                      onClick={() => setShowColors(true)}
+                    />
+                  </div>
                 </div>
+
                 <div
-                  className={`flex flex-wrap gap-2 ${
+                  className={`flex flex-wrap gap-2 h-[108px] ${
                     showColors ? " block " : " hidden "
                   }`}
                 >
