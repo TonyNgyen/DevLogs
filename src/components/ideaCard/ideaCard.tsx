@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "@/app/firebase";
 import { makeid } from "@/lib/utils";
+import { motion, AnimatePresence } from "motion/react";
 
 interface Note {
   id: number;
@@ -161,32 +162,45 @@ function IdeaCard({ idea }: { idea: Idea }) {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
       className={`w-full h-[280px] p-[15px] rounded-[20px] lg:w-fill lg:h-[347px]`}
       style={{
         backgroundColor: `#${addMode ? `FFFFFF` : `${ideaColor}80`}`,
         border: `solid #${ideaColor == "FFFFFF" ? "000000" : ideaColor} 4px`,
       }}
     >
-      <div className="flex justify-between items-center mb-4 ">
-        {nameChange ? (
-          <input
-            type="text"
-            name="ideaName"
-            placeholder="Idea Name"
-            className="text-3xl font-bold border-b-[3px] border-black w-1/2 bg-transparent"
-            value={ideaName}
-            onChange={(e) => setIdeaName(e.target.value)}
-          />
-        ) : (
-          <h1 className="text-3xl font-bold">
-            {addMode ? "New Note?" : idea.name}
-          </h1>
-        )}
+      <div className="flex justify-between items-center mb-4">
+        <AnimatePresence initial={false}>
+          {nameChange ? (
+            <div className="w-1/2 relative">
+              <input
+                type="text"
+                name="ideaName"
+                placeholder="Idea Name"
+                className="text-3xl font-bold bg-transparent w-full"
+                value={ideaName}
+                onChange={(e) => setIdeaName(e.target.value)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="absolute bg-black h-[3px] w-full"
+              ></motion.div>
+            </div>
+          ) : (
+            <h1 className="text-3xl font-bold">
+              {addMode ? "New Note?" : idea.name}
+            </h1>
+          )}
+        </AnimatePresence>
 
         {addMode ? (
           <div className="flex">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               className="text-5xl text-red-600"
               onClick={() => {
                 setImportance(2);
@@ -196,19 +210,23 @@ function IdeaCard({ idea }: { idea: Idea }) {
               }}
             >
               <PiXCircleBold />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               className="text-5xl text-green-600 "
               onClick={() => {
                 addNote();
               }}
             >
               <PiCheckCircleBold />
-            </button>
+            </motion.button>
           </div>
         ) : nameChange ? (
           <div className="flex gap-0">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               className="text-5xl text-red-600"
               onClick={() => {
                 setNameChange(false);
@@ -216,20 +234,24 @@ function IdeaCard({ idea }: { idea: Idea }) {
               }}
             >
               <PiXCircleBold />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               className="text-5xl text-green-600 "
               onClick={() => {
                 changeName();
               }}
             >
               <PiCheckCircleBold />
-            </button>
+            </motion.button>
           </div>
         ) : colorChange ? (
           <div className="flex gap-0">
             <div className="relative flex">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
                 className="text-5xl text-red-600"
                 onClick={() => {
                   setColorChange(false);
@@ -237,217 +259,249 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 }}
               >
                 <PiXCircleBold />
-              </button>
-              {colorChange && (
-                <div
-                  className="absolute bg-white w-44 right-0 top-[3.2rem] rounded-lg border-black border-[3px] z-20 grid grid-cols-3 grid-rows-3 gap-2 p-2"
-                  style={{ boxShadow: "4px 4px black" }}
-                >
-                  {colorOptions.map((color) =>
-                    color != "FFFFFF" ? (
-                      <div
-                        className="w-fill aspect-square rounded-lg"
-                        style={{
-                          backgroundColor: `white`,
-                        }}
-                        onClick={() => {
-                          setIdeaColor(color);
-                        }}
-                        key={color}
-                      >
-                        <div
+              </motion.button>
+              <AnimatePresence initial={false}>
+                {colorChange && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                    className="absolute bg-white w-44 right-0 top-[3.2rem] rounded-lg border-black border-[3px] z-20 grid grid-cols-3 grid-rows-3 gap-2 p-2"
+                    style={{ boxShadow: "4px 4px black" }}
+                  >
+                    {colorOptions.map((color) =>
+                      color != "FFFFFF" ? (
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
                           className="w-fill aspect-square rounded-lg"
                           style={{
-                            backgroundColor: `#${color}80`,
-                            border: `solid #${color} 3px`,
+                            backgroundColor: `white`,
                           }}
                           onClick={() => {
                             setIdeaColor(color);
                           }}
                           key={color}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className="w-fill aspect-square border-[3px] border-black rounded-lg bg-white"
-                        onClick={() => {
-                          setIdeaColor(color);
-                        }}
-                        key={color}
-                      />
-                    )
-                  )}
-                </div>
-              )}
+                        >
+                          <div
+                            className="w-fill aspect-square rounded-lg"
+                            style={{
+                              backgroundColor: `#${color}80`,
+                              border: `solid #${color} 3px`,
+                            }}
+                            onClick={() => {
+                              setIdeaColor(color);
+                            }}
+                            key={color}
+                          />
+                        </motion.button>
+                      ) : (
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="w-fill aspect-square border-[3px] border-black rounded-lg bg-white"
+                          onClick={() => {
+                            setIdeaColor(color);
+                          }}
+                          key={color}
+                        ></motion.button>
+                      )
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               className="text-5xl text-green-600 "
               onClick={() => {
                 changeColor();
               }}
             >
               <PiCheckCircleBold />
-            </button>
+            </motion.button>
           </div>
         ) : (
           <div className="flex gap-0">
             <div className="relative">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
                 className="text-5xl flex justify-center items-center w-10 z-0"
                 onClick={() => setSettingsPopup(!settingsPopup)}
               >
                 <BsThreeDotsVertical />
-              </button>
-              {settingsPopup && (
-                <ul
-                  className="absolute bg-white w-48 right-0 rounded-lg border-black border-[3px] z-20 overflow-hidden"
-                  style={{ boxShadow: "4px 4px black" }}
-                >
-                  <li
-                    className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
-                    onClick={() => {
-                      setNameChange(true);
-                      setSettingsPopup(false);
-                    }}
+              </motion.button>
+              <AnimatePresence initial={false}>
+                {settingsPopup && (
+                  <motion.ul
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                    className="absolute bg-white w-48 right-0 rounded-lg border-black border-[3px] z-20 overflow-hidden"
+                    style={{ boxShadow: "4px 4px black" }}
                   >
-                    Change Name
-                  </li>
-                  <li
-                    className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
-                    onClick={() => {
-                      setColorChange(true);
-                      setSettingsPopup(false);
-                    }}
-                  >
-                    Change Color
-                  </li>
-                  <li
-                    className="text-2xl text-right p-2 font-semibold text-red-600 hover:text-white hover:bg-red-600"
-                    onClick={() => {
-                      deleteIdea();
-                      setSettingsPopup(false);
-                    }}
-                  >
-                    Delete Idea
-                  </li>
-                </ul>
-              )}
+                    <li
+                      className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
+                      onClick={() => {
+                        setNameChange(true);
+                        setSettingsPopup(false);
+                      }}
+                    >
+                      Change Name
+                    </li>
+                    <li
+                      className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
+                      onClick={() => {
+                        setColorChange(true);
+                        setSettingsPopup(false);
+                      }}
+                    >
+                      Change Color
+                    </li>
+                    <li
+                      className="text-2xl text-right p-2 font-semibold text-red-600 hover:text-white hover:bg-red-600"
+                      onClick={() => {
+                        deleteIdea();
+                        setSettingsPopup(false);
+                      }}
+                    >
+                      Delete Idea
+                    </li>
+                  </motion.ul>
+                )}
+              </AnimatePresence>
             </div>
-            {/* <button className="text-4xl ">
-            <FaGear />
-          </button> */}
 
-            <button className="text-5xl " onClick={() => setAddMode(true)}>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="text-5xl "
+              onClick={() => setAddMode(true)}
+            >
               <PiPlusCircleBold />
-            </button>
+            </motion.button>
           </div>
         )}
       </div>
       <div className="flex flex-col gap-[6px] overflow-y-auto h-[73%]">
-        {addMode ? (
-          <form>
-            <textarea
-              rows={2}
-              className={`border-[2px] rounded-lg p-3 w-full font-bold text-lg ${
-                emptyNoteError
-                  ? " border-red-600 placeholder-red-600"
-                  : " border-black "
-              }`}
-              placeholder={`${
-                emptyNoteError
-                  ? "Please write a new note!"
-                  : "What's your new note?"
-              }`}
-              value={noteContent}
-              onChange={(e) => {
-                setNoteContent(e.target.value);
-                setEmptyNoteError(false);
-              }}
-            />
+        <AnimatePresence initial={false}>
+          {addMode ? (
+            <form>
+              <motion.textarea
+                whileTap={{ scale: 0.98 }}
+                rows={2}
+                className={`border-[2px] rounded-lg p-3 w-full font-bold text-lg ${
+                  emptyNoteError
+                    ? " border-red-600 placeholder-red-600"
+                    : " border-black "
+                }`}
+                placeholder={`${
+                  emptyNoteError
+                    ? "Please write a new note!"
+                    : "What's your new note?"
+                }`}
+                value={noteContent}
+                onChange={(e) => {
+                  setNoteContent(e.target.value);
+                  setEmptyNoteError(false);
+                }}
+              />
 
-            <h2 className="text-2xl font-semibold">Importance</h2>
-            <div className="flex">
-              <div
-                className={`${importanceStyles} rounded-l-lg`}
-                style={{
-                  background:
-                    importance == 1 ? `#${ideaColor}80` : "rgb(229 231 235)",
-                  border: `${
-                    ideaColor == "FFFFFF"
-                      ? " solid 2px black "
-                      : importance == 1
-                      ? ` none `
-                      : " solid 2px black "
-                  }`,
-                }}
-                onClick={() => setImportance(1)}
-              >
-                Low
+              <h2 className="text-2xl font-semibold">Importance</h2>
+              <div className="flex">
+                <button
+                  type="button"
+                  className={`${importanceStyles} rounded-l-lg`}
+                  style={{
+                    background:
+                      importance == 1 ? `#${ideaColor}80` : "rgb(229 231 235)",
+                    border: `${
+                      ideaColor == "FFFFFF"
+                        ? " solid 2px black "
+                        : importance == 1
+                        ? ` none `
+                        : " solid 2px black "
+                    }`,
+                  }}
+                  onClick={() => setImportance(1)}
+                >
+                  Low
+                </button>
+                <button
+                  type="button"
+                  className={`${importanceStyles} `}
+                  style={{
+                    background:
+                      importance == 2 ? `#${ideaColor}BF` : "rgb(229 231 235)",
+                    border: `${
+                      ideaColor == "FFFFFF"
+                        ? " solid 2px black "
+                        : importance == 2
+                        ? ` none `
+                        : "solid 2px black "
+                    }`,
+                  }}
+                  onClick={() => setImportance(2)}
+                >
+                  Medium
+                </button>
+                <button
+                  type="button"
+                  className={`${importanceStyles} rounded-r-lg`}
+                  style={{
+                    background:
+                      importance == 3 ? `#${ideaColor}FF` : "rgb(229 231 235)",
+                    border: `${
+                      ideaColor == "FFFFFF"
+                        ? " solid 2px black "
+                        : importance == 3
+                        ? ` none `
+                        : " solid 2px black "
+                    }`,
+                  }}
+                  onClick={() => setImportance(3)}
+                >
+                  High
+                </button>
               </div>
+            </form>
+          ) : (
+            idea.notes.map((note) => (
               <div
-                className={`${importanceStyles} `}
+                className="bg-white rounded-[10px] flex justify-between p-3 items-center"
+                key={note?.id}
                 style={{
-                  background:
-                    importance == 2 ? `#${ideaColor}BF` : "rgb(229 231 235)",
-                  border: `${
-                    ideaColor == "FFFFFF"
-                      ? " solid 2px black "
-                      : importance == 2
-                      ? ` none `
-                      : "solid 2px black "
-                  }`,
+                  borderLeft: `solid 4px ${getBorderColor(note?.importance)}`,
+                  borderTop:
+                    ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
+                  borderRight:
+                    ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
+                  borderBottom:
+                    ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
                 }}
-                onClick={() => setImportance(2)}
               >
-                Medium
+                <p className="font-semibold text-xl">{note?.content}</p>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-2xl text-green-600"
+                  onClick={() => removeNote(note)}
+                >
+                  <FaCheck />
+                </motion.button>
               </div>
-              <div
-                className={`${importanceStyles} rounded-r-lg`}
-                style={{
-                  background:
-                    importance == 3 ? `#${ideaColor}FF` : "rgb(229 231 235)",
-                  border: `${
-                    ideaColor == "FFFFFF"
-                      ? " solid 2px black "
-                      : importance == 3
-                      ? ` none `
-                      : " solid 2px black "
-                  }`,
-                }}
-                onClick={() => setImportance(3)}
-              >
-                High
-              </div>
-            </div>
-          </form>
-        ) : (
-          idea.notes.map((note) => (
-            <div
-              className="bg-white rounded-[10px] flex justify-between p-3 items-center"
-              key={note?.id}
-              style={{
-                borderLeft: `solid 4px ${getBorderColor(note?.importance)}`,
-                borderTop:
-                  ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
-                borderRight:
-                  ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
-                borderBottom:
-                  ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
-              }}
-            >
-              <p className="font-semibold text-xl">{note?.content}</p>
-              <button
-                className="text-2xl text-green-600"
-                onClick={() => removeNote(note)}
-              >
-                <FaCheck />
-              </button>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
