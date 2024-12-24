@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { IoMenu } from "react-icons/io5";
 import LoginForm from "../loginForm/loginForm";
 import SignUpForm from "../signupForm/signupForm";
+import SignUpLoginForm from "../signUpLoginForm/signUpLoginForm";
 
 function Header({ loggedIn }: { loggedIn: Boolean }) {
   const colorOptions = [
@@ -31,6 +32,8 @@ function Header({ loggedIn }: { loggedIn: Boolean }) {
   const [dropdown, setDropdown] = useState(false);
   const [login, setLogin] = useState(false);
   const [signUp, setSignUp] = useState(false);
+  const [authPopup, setAuthPopup] = useState(false);
+  const [popUpVariant, setPopUpVariant] = useState(0);
 
   const user = auth.currentUser;
 
@@ -289,8 +292,10 @@ function Header({ loggedIn }: { loggedIn: Boolean }) {
                 <li
                   className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
                   onClick={() => {
-                    setLogin(true);
+                    // setLogin(true);
                     setDropdown(false);
+                    setPopUpVariant(0);
+                    setAuthPopup(true);
                   }}
                 >
                   Log in
@@ -298,8 +303,10 @@ function Header({ loggedIn }: { loggedIn: Boolean }) {
                 <li
                   className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer"
                   onClick={() => {
-                    setSignUp(true);
+                    // setSignUp(true);
                     setDropdown(false);
+                    setPopUpVariant(1);
+                    setAuthPopup(true);
                   }}
                 >
                   Sign up
@@ -309,7 +316,7 @@ function Header({ loggedIn }: { loggedIn: Boolean }) {
           </AnimatePresence>
         </div>
       </motion.div>
-      <AnimatePresence initial={false}>
+      {/* <AnimatePresence initial={false}>
         {login && (
           <motion.div
             exit={{ opacity: 0 }}
@@ -338,6 +345,19 @@ function Header({ loggedIn }: { loggedIn: Boolean }) {
             <motion.div className="w-[85vw]">
               <SignUpForm setLogin={setLogin} setSignUp={setSignUp} />
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence> */}
+      <AnimatePresence initial={true}>
+        {authPopup && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <SignUpLoginForm
+              setLogin={setLogin}
+              setSignUp={setSignUp}
+              setAuthPopup={setAuthPopup}
+              setPopUpVariant={setPopUpVariant}
+              popUpVariant={popUpVariant}
+            />
           </motion.div>
         )}
       </AnimatePresence>
