@@ -165,7 +165,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`w-full h-[280px] p-[15px] rounded-[20px] lg:w-fill lg:h-[347px]`}
+      className={`w-full h-[280px] p-[15px] rounded-[20px] lg:w-fill lg:h-[370px]`}
       style={{
         backgroundColor: `#${addMode ? `FFFFFF` : `${ideaColor}80`}`,
         border: `solid #${ideaColor == "FFFFFF" ? "000000" : ideaColor} 4px`,
@@ -348,7 +348,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                     style={{ boxShadow: "4px 4px black" }}
                   >
                     <li
-                      className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
+                      className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black cursor-pointer"
                       onClick={() => {
                         setNameChange(true);
                         setSettingsPopup(false);
@@ -357,7 +357,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                       Change Name
                     </li>
                     <li
-                      className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black"
+                      className="text-2xl text-right p-2 hover:bg-gray-300 font-semibold border-b-2 border-black cursor-pointer"
                       onClick={() => {
                         setColorChange(true);
                         setSettingsPopup(false);
@@ -366,7 +366,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                       Change Color
                     </li>
                     <li
-                      className="text-2xl text-right p-2 font-semibold text-red-600 hover:text-white hover:bg-red-600"
+                      className="text-2xl text-right p-2 font-semibold text-red-600 hover:text-white hover:bg-red-600 cursor-pointer"
                       onClick={() => {
                         deleteIdea();
                         setSettingsPopup(false);
