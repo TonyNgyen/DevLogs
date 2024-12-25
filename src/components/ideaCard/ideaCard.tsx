@@ -174,7 +174,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
       <div className="flex justify-between items-center mb-4">
         <AnimatePresence initial={false}>
           {nameChange ? (
-            <div className="w-1/2 relative">
+            <div className="w-full relative">
               <input
                 type="text"
                 name="ideaName"

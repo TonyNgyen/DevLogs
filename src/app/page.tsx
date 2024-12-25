@@ -2,31 +2,39 @@
 
 import React, { useEffect, useState } from "react";
 import CardContainer from "@/components/cardContainer/cardContainer";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import Header from "@/components/header/header";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebase";
-import { motion } from "motion/react";
+import IdeaCard from "@/components/ideaCard/ideaCard";
+import styles from "./homePage.module.css";
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null); // Store the user state
   const [loading, setLoading] = useState(true); // Track loading state
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log("User logged in:", userCredential.user);
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
-  };
+  const heroIdeas = [
+    {
+      id: "1",
+      name: "Idea 1",
+      createdAt: "1/1/2024",
+      color: "7BC7FF",
+      notes: [],
+    },
+    {
+      id: "2",
+      name: "Idea 2",
+      createdAt: "1/1/2024",
+      color: "7BC7FF",
+      notes: [],
+    },
+    {
+      id: "3",
+      name: "Idea 3",
+      createdAt: "1/1/2024",
+      color: "7BC7FF",
+      notes: [],
+    },
+  ];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -62,53 +70,40 @@ export default function Home() {
   return (
     <div>
       <Header loggedIn={false} />
-      {/* <div className="flex items-center justify-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="w-80 bg-[#E2E2E2] p-6 rounded-[20px] border-[#9E9E9E] border-4"
+      <div className="mb-16">
+        <h1
+          className="mt-3 mb-4 font-bold"
+          style={{ fontSize: "5rem", lineHeight: 1 }}
         >
-          <h1 className="text-4xl font-bold text-center mb-[15px]">Login</h1>
-          <form onSubmit={handleLogin} className="flex flex-col gap-6">
-            <div>
-              <h2 className="text-2xl font-bold">Email</h2>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="border-b-[3px] border-b-black bg-transparent text-xl w-full"
-              />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold">Password</h2>
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="border-b-[3px] border-b-black bg-transparent text-xl w-full"
-              />
-            </div>
+          Plan Organize Develop
+        </h1>
+        <h2 className="text-3xl font-semibold mb-3">Made easy with DevLogs</h2>
+        <div className="flex gap-4">
+          <button className="text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3">
+            Get Started
+          </button>
+          <button className="text-2xl border-[#CCA8FF] border-[3px] font-bold rounded-md py-1 px-3">
+            Learn More
+          </button>
+        </div>
+      </div>
 
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              type="submit"
-              className="bg-[#E5D3FF] border-[#CCA8FF] border-[4px] rounded-lg py-1 font-bold text-xl"
-            >
-              Log in
-            </motion.button>
-            <h2 className="text-center">
-              Have no Account?
-              <span className="font-bold">
-                <a href="/signUp"> Sign up!</a>
-              </span>
-            </h2>
-          </form>
-        </motion.div>
+      {/* <div className={`flex my-0 mx-auto overflow-hidden h-[280px]`}>
+        <div className={`flex gap-2 pr-2 ${styles.group}`}>
+          {heroIdeas.map((idea) => (
+            <div className="w-[calc(100vw-40px)]">
+              <IdeaCard idea={idea} key={idea.id} />
+            </div>
+          ))}
+        </div>
+
+        <div className={`flex gap-2 pr-2 ${styles.group}`}>
+          {heroIdeas.map((idea) => (
+            <div className="w-[calc(100vw-40px)]">
+              <IdeaCard idea={idea} key={idea.id} />
+            </div>
+          ))}
+        </div>
       </div> */}
     </div>
   );

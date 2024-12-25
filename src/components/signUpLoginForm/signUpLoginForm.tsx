@@ -8,14 +8,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 function SignUpLoginForm({
-  setLogin,
-  setSignUp,
   setAuthPopup,
   setPopUpVariant,
   popUpVariant,
 }: {
-  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  setSignUp: React.Dispatch<React.SetStateAction<boolean>>;
   setAuthPopup: React.Dispatch<React.SetStateAction<boolean>>;
   setPopUpVariant: React.Dispatch<React.SetStateAction<number>>;
   popUpVariant: number;
@@ -85,7 +81,8 @@ function SignUpLoginForm({
                 className="text-4xl font-bold text-center mb-[15px]"
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }} transition={{duration: 0.3, type:"spring"}}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.3, type: "spring" }}
               >
                 Log In
               </motion.h1>
@@ -96,7 +93,8 @@ function SignUpLoginForm({
                 className="text-4xl font-bold text-center mb-[15px]"
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }} transition={{duration: 0.3, type:"spring"}}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.3, type: "spring" }}
               >
                 Sign Up
               </motion.h1>
@@ -162,7 +160,8 @@ function SignUpLoginForm({
                     key="loginButton"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0 }} transition={{duration: 0.3, type:"spring"}}
+                    exit={{ opacity: 0, scale: 0 }}
+                    transition={{ duration: 0.3, type: "spring" }}
                   >
                     Log In
                   </motion.p>
@@ -172,7 +171,8 @@ function SignUpLoginForm({
                     key="signUpButton"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0 }} transition={{duration: 0.3, type:"spring"}}
+                    exit={{ opacity: 0, scale: 0 }}
+                    transition={{ duration: 0.3, type: "spring" }}
                   >
                     Sign Up
                   </motion.p>
@@ -186,7 +186,8 @@ function SignUpLoginForm({
                   key="switchToSignUp"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0 }} transition={{duration: 0.3, type:"spring"}}
+                  exit={{ opacity: 0, scale: 0 }}
+                  transition={{ duration: 0.3, type: "spring" }}
                   className="text-center text-xl"
                 >
                   Have no account?
@@ -206,7 +207,8 @@ function SignUpLoginForm({
                   key="switchToLogin"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0 }} transition={{duration: 0.3, type:"spring"}}
+                  exit={{ opacity: 0, scale: 0 }}
+                  transition={{ duration: 0.3, type: "spring" }}
                   className="text-center text-xl"
                 >
                   Have an account?

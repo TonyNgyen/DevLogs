@@ -8,8 +8,6 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { makeid } from "@/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { IoMenu } from "react-icons/io5";
-import LoginForm from "../loginForm/loginForm";
-import SignUpForm from "../signupForm/signupForm";
 import SignUpLoginForm from "../signUpLoginForm/signUpLoginForm";
 
 function Header({ loggedIn }: { loggedIn: Boolean }) {
@@ -30,8 +28,6 @@ function Header({ loggedIn }: { loggedIn: Boolean }) {
   const [selectedColor, setSelectedColor] = useState("FFFFFF");
   const [ideaName, setIdeaName] = useState("");
   const [dropdown, setDropdown] = useState(false);
-  const [login, setLogin] = useState(false);
-  const [signUp, setSignUp] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
   const [popUpVariant, setPopUpVariant] = useState(0);
 
@@ -266,94 +262,70 @@ function Header({ loggedIn }: { loggedIn: Boolean }) {
       </AnimatePresence>
     </motion.div>
   ) : (
-    <div>
+    <div className="h-[96px]">
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-[#9E9E9E] bg-opacity-30 border-[4px] border-[#9E9E9E] h-[96px] flex items-center justify-between px-[15px] rounded-[20px] mb-3"
+        className="bg-[#9E9E9E] bg-opacity-30 border-[4px]  h-[96px] flex items-center justify-between px-[15px] mb-3 absolute top-0 left-0 w-screen"
       >
         <h1 className="text-4xl font-extrabold">DevLogs</h1>
-        <div className="relative">
+        <div className="flex gap-4 items-center justify-center">
           <button
-            className="text-5xl md:hidden"
-            onClick={() => setDropdown(!dropdown)}
+            className="text-xl sm:text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3"
+            onClick={() => {
+              setDropdown(false);
+              setPopUpVariant(1);
+              setAuthPopup(true);
+            }}
           >
-            <IoMenu />
+            Sign Up
           </button>
-          <AnimatePresence initial={false}>
-            {dropdown && (
-              <motion.ul
-                className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
-                style={{ boxShadow: "4px 4px black" }}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-              >
-                <li
-                  className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
-                  onClick={() => {
-                    // setLogin(true);
-                    setDropdown(false);
-                    setPopUpVariant(0);
-                    setAuthPopup(true);
-                  }}
+          <div className="relative">
+            <button
+              className="text-5xl md:hidden flex"
+              onClick={() => setDropdown(!dropdown)}
+            >
+              <IoMenu />
+            </button>
+            <AnimatePresence initial={false}>
+              {dropdown && (
+                <motion.ul
+                  className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
+                  style={{ boxShadow: "4px 4px black" }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0 }}
                 >
-                  Log in
-                </li>
-                <li
-                  className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer"
-                  onClick={() => {
-                    // setSignUp(true);
-                    setDropdown(false);
-                    setPopUpVariant(1);
-                    setAuthPopup(true);
-                  }}
-                >
-                  Sign up
-                </li>
-              </motion.ul>
-            )}
-          </AnimatePresence>
+                  <li
+                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
+                    onClick={() => {
+                      setDropdown(false);
+                      setPopUpVariant(0);
+                      setAuthPopup(true);
+                    }}
+                  >
+                    Log in
+                  </li>
+                  <li
+                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer"
+                    onClick={() => {
+                      setDropdown(false);
+                      setPopUpVariant(1);
+                      setAuthPopup(true);
+                    }}
+                  >
+                    Sign up
+                  </li>
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </motion.div>
-      {/* <AnimatePresence initial={false}>
-        {login && (
-          <motion.div
-            exit={{ opacity: 0 }}
-            className="w-screen h-screen absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 z-40 flex justify-center items-center"
-          >
-            <div
-              className="absolute w-full h-full bg-black opacity-50"
-              onClick={() => setLogin(false)}
-            ></div>
-            <motion.div className="w-[85vw]">
-              <LoginForm setLogin={setLogin} setSignUp={setSignUp} />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence initial={false}>
-        {signUp && (
-          <motion.div
-            exit={{ opacity: 0 }}
-            className="w-screen h-screen absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 z-40 flex justify-center items-center"
-          >
-            <div
-              className="absolute w-full h-full bg-black opacity-50"
-              onClick={() => setSignUp(false)}
-            ></div>
-            <motion.div className="w-[85vw]">
-              <SignUpForm setLogin={setLogin} setSignUp={setSignUp} />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence> */}
       <AnimatePresence initial={true}>
         {authPopup && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <SignUpLoginForm
-              setLogin={setLogin}
-              setSignUp={setSignUp}
               setAuthPopup={setAuthPopup}
               setPopUpVariant={setPopUpVariant}
               popUpVariant={popUpVariant}
