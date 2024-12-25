@@ -30,7 +30,8 @@ interface Idea {
   id: string;
   name: string;
   createdAt: string;
-  color?: string;
+  borderColor?: string;
+  fillColor?: string;
   notes: (Note | null)[];
 }
 
@@ -40,7 +41,8 @@ function IdeaCard({ idea }: { idea: Idea }) {
   const [nameChange, setNameChange] = useState(false);
   const [ideaName, setIdeaName] = useState(idea.name);
   const [colorChange, setColorChange] = useState(false);
-  const [ideaColor, setIdeaColor] = useState(idea.color);
+  const [borderColor, setBorderColor] = useState(idea.borderColor);
+  const [fillColor, setFillColor] = useState(idea.fillColor);
   const [noteContent, setNoteContent] = useState("");
   const [emptyNoteError, setEmptyNoteError] = useState(false);
   const [importance, setImportance] = useState(2);
@@ -48,16 +50,16 @@ function IdeaCard({ idea }: { idea: Idea }) {
   const importanceStyles =
     "w-1/3 h-[30px] flex justify-center items-center font-semibold text-lg bg-gray-200 border-2 border-black";
   const user = auth.currentUser;
-  const colorOptions = [
-    "FF7EA1",
-    "FF9090",
-    "FFA656",
-    "FFD55E",
-    "61CA68",
-    "7BC7FF",
-    "CCA8FF",
-    "FFFFFF",
-  ];
+  const colorOptions = {
+    FF7EA1: "FFBED0",
+    FF9090: "FFC7C7",
+    FFA656: "FFD2AA",
+    FFD55E: "FFEAAE",
+    "61CA68": "AFE4B3",
+    "7BC7FF": "BCE3FF",
+    CCA8FF: "E5D3FF",
+    "000000": "FFFFFF",
+  };
 
   const addNote = async () => {
     if (!user?.uid) {
@@ -126,7 +128,8 @@ function IdeaCard({ idea }: { idea: Idea }) {
     try {
       const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
       await updateDoc(docRef, {
-        color: ideaColor,
+        borderColor: borderColor,
+        fillColor: fillColor,
       });
       console.log("Idea color successfully changed!");
       setColorChange(false);
@@ -150,10 +153,10 @@ function IdeaCard({ idea }: { idea: Idea }) {
   };
 
   const getBorderColor = (importance: number | undefined) => {
-    if (ideaColor?.toUpperCase() !== "FFFFFF") {
+    if (borderColor?.toUpperCase() !== "000000") {
       if (importance === 1) return `#BDBDBD`;
-      if (importance === 2) return `#${ideaColor}BF`;
-      return `#${ideaColor}FF`;
+      if (importance === 2) return `#${borderColor}BF`;
+      return `#${borderColor}FF`;
     } else {
       if (importance === 1) return "#E2E2E2";
       if (importance === 2) return "#BDBDBD";
@@ -167,8 +170,8 @@ function IdeaCard({ idea }: { idea: Idea }) {
       animate={{ opacity: 1, scale: 1 }}
       className={`w-full h-[280px] p-[15px] rounded-[20px] lg:w-fill lg:h-[370px]`}
       style={{
-        backgroundColor: `#${addMode ? `FFFFFF` : `${ideaColor}80`}`,
-        border: `solid #${ideaColor == "FFFFFF" ? "000000" : ideaColor} 4px`,
+        backgroundColor: `#${addMode ? `FFFFFF` : `${fillColor}`}`,
+        border: `solid #${borderColor} 4px`,
       }}
     >
       <div className="flex justify-between items-center mb-4">
@@ -255,7 +258,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 className="text-5xl text-red-600"
                 onClick={() => {
                   setColorChange(false);
-                  setIdeaColor(idea.color);
+                  setBorderColor(idea.borderColor);
                 }}
               >
                 <PiXCircleBold />
@@ -269,8 +272,8 @@ function IdeaCard({ idea }: { idea: Idea }) {
                     className="absolute bg-white w-44 right-0 top-[3.2rem] rounded-lg border-black border-[3px] z-20 grid grid-cols-3 grid-rows-3 gap-2 p-2"
                     style={{ boxShadow: "4px 4px black" }}
                   >
-                    {colorOptions.map((color) =>
-                      color != "FFFFFF" ? (
+                    {Object.keys(colorOptions).map((color) =>
+                      color != "000000" ? (
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
@@ -278,25 +281,19 @@ function IdeaCard({ idea }: { idea: Idea }) {
                           animate={{ opacity: 1, scale: 1 }}
                           className="w-fill aspect-square rounded-lg"
                           style={{
-                            backgroundColor: `white`,
+                            backgroundColor: `#${
+                              colorOptions[color as keyof typeof colorOptions]
+                            }`,
+                            border: `solid #${color} 3px`,
                           }}
                           onClick={() => {
-                            setIdeaColor(color);
+                            setBorderColor(color);
+                            setFillColor(
+                              colorOptions[color as keyof typeof colorOptions]
+                            );
                           }}
                           key={color}
-                        >
-                          <div
-                            className="w-fill aspect-square rounded-lg"
-                            style={{
-                              backgroundColor: `#${color}80`,
-                              border: `solid #${color} 3px`,
-                            }}
-                            onClick={() => {
-                              setIdeaColor(color);
-                            }}
-                            key={color}
-                          />
-                        </motion.button>
+                        ></motion.button>
                       ) : (
                         <motion.button
                           whileHover={{ scale: 1.1 }}
@@ -305,7 +302,10 @@ function IdeaCard({ idea }: { idea: Idea }) {
                           animate={{ opacity: 1, scale: 1 }}
                           className="w-fill aspect-square border-[3px] border-black rounded-lg bg-white"
                           onClick={() => {
-                            setIdeaColor(color);
+                            setBorderColor(color);
+                            setFillColor(
+                              colorOptions[color as keyof typeof colorOptions]
+                            );
                           }}
                           key={color}
                         ></motion.button>
@@ -421,9 +421,11 @@ function IdeaCard({ idea }: { idea: Idea }) {
                   className={`${importanceStyles} rounded-l-lg`}
                   style={{
                     background:
-                      importance == 1 ? `#${ideaColor}80` : "rgb(229 231 235)",
+                      importance == 1
+                        ? `#${borderColor}80`
+                        : "rgb(229 231 235)",
                     border: `${
-                      ideaColor == "FFFFFF"
+                      borderColor == "000000"
                         ? " solid 2px black "
                         : importance == 1
                         ? ` none `
@@ -439,9 +441,11 @@ function IdeaCard({ idea }: { idea: Idea }) {
                   className={`${importanceStyles} `}
                   style={{
                     background:
-                      importance == 2 ? `#${ideaColor}BF` : "rgb(229 231 235)",
+                      importance == 2
+                        ? `#${borderColor}BF`
+                        : "rgb(229 231 235)",
                     border: `${
-                      ideaColor == "FFFFFF"
+                      borderColor == "000000"
                         ? " solid 2px black "
                         : importance == 2
                         ? ` none `
@@ -457,9 +461,11 @@ function IdeaCard({ idea }: { idea: Idea }) {
                   className={`${importanceStyles} rounded-r-lg`}
                   style={{
                     background:
-                      importance == 3 ? `#${ideaColor}FF` : "rgb(229 231 235)",
+                      importance == 3
+                        ? `#${borderColor}FF`
+                        : "rgb(229 231 235)",
                     border: `${
-                      ideaColor == "FFFFFF"
+                      borderColor == "000000"
                         ? " solid 2px black "
                         : importance == 3
                         ? ` none `
@@ -478,13 +484,17 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 className="bg-white rounded-[10px] flex justify-between p-3 items-center"
                 key={note?.id}
                 style={{
-                  borderLeft: `solid 4px ${getBorderColor(note?.importance)}`,
-                  borderTop:
-                    ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
-                  borderRight:
-                    ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
-                  borderBottom:
-                    ideaColor === "FFFFFF" ? "solid 3px #E2E2E2" : "none",
+                  borderLeft: `solid 7px ${getBorderColor(note?.importance)}`,
+                  // borderTop:
+                  //   borderColor === "000000" ? "solid 1px #C2C2C2" : "none",
+                  // borderRight:
+                  //   borderColor === "000000" ? "solid 1px #C2C2C2" : "none",
+                  // borderBottom:
+                  //   borderColor === "000000" ? "solid 1px #C2C2C2" : "none",
+                  boxShadow:
+                    borderColor === "000000"
+                      ? "inset 0px 0px 0px 1px #C2C2C2"
+                      : "none",
                 }}
               >
                 <p className="font-semibold text-xl">{note?.content}</p>

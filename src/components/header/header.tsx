@@ -11,27 +11,34 @@ import { IoMenu } from "react-icons/io5";
 import SignUpLoginForm from "../signUpLoginForm/signUpLoginForm";
 
 function Header({ loggedIn }: { loggedIn: boolean }) {
-  const colorOptions = [
-    "FF7EA1",
-    "FF9090",
-    "FFA656",
-    "FFD55E",
-    "61CA68",
-    "7BC7FF",
-    "CCA8FF",
-    "FFFFFF",
-  ];
+  const colorOptions = {
+    FF7EA1: "FFBED0",
+    FF9090: "FFC7C7",
+    FFA656: "FFD2AA",
+    FFD55E: "FFEAAE",
+    "61CA68": "AFE4B3",
+    "7BC7FF": "BCE3FF",
+    CCA8FF: "E5D3FF",
+    "000000": "FFFFFF",
+  };
 
   const [addPopup, setAddPopup] = useState(false);
   const [ideaPopUp, setIdeaPopup] = useState(false);
   const [showColors, setShowColors] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("FFFFFF");
+  const [selectedBorderColor, setSelectedBorderColor] = useState("000000");
+  const [selectedFillColor, setSelectedFillColor] = useState("FFFFFF");
   const [ideaName, setIdeaName] = useState("");
   const [dropdown, setDropdown] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
   const [popUpVariant, setPopUpVariant] = useState(0);
 
   const user = auth.currentUser;
+
+  const setSelectedFillColorTyped = (color: string) => {
+    const fillColor =
+      colorOptions[color as keyof typeof colorOptions] ?? "000000";
+    setSelectedFillColor(fillColor);
+  };
 
   const addIdea = async () => {
     if (!user?.uid) {
@@ -40,10 +47,17 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
     try {
       const docId = makeid();
       const docRef = doc(db, "users", user?.uid, "ideas", docId);
+      if (!(selectedBorderColor in colorOptions)) {
+        return;
+      }
+      const fillColor =
+        colorOptions[selectedBorderColor as keyof typeof colorOptions] ??
+        "000000";
       await setDoc(docRef, {
         id: docId,
         name: ideaName,
-        color: selectedColor,
+        borderColor: selectedBorderColor,
+        fillColor: fillColor,
         createdAt: serverTimestamp(),
         notes: [],
       });
@@ -52,10 +66,6 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
       console.error("Error creating document: ", error);
     }
   };
-
-  const coloredBorder = `solid #${
-    selectedColor == "FFFFFF" ? `000000` : selectedColor
-  } 3px`;
 
   return loggedIn ? (
     <motion.div
@@ -111,10 +121,8 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
               <div
                 className="w-[90vw] lg:w-[32vw] xl:w-[23vw] md:w-[80vw] min-h-[45vh] rounded-[20px] p-[15px] z-50"
                 style={{
-                  background: `#${selectedColor}80`,
-                  border: `solid #${
-                    selectedColor == "FFFFFF" ? `000000` : selectedColor
-                  } 5px`,
+                  background: `#${selectedFillColor}`,
+                  border: `solid #${selectedBorderColor} 5px`,
                 }}
               >
                 <div className="flex justify-between mb-5">
@@ -123,7 +131,8 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                     className="text-4xl self-start"
                     onClick={() => {
                       setIdeaPopup(false);
-                      setSelectedColor("FFFFFF");
+                      setSelectedBorderColor("000000");
+                      setSelectedFillColor("FFFFFF");
                       setShowColors(false);
                     }}
                   >
@@ -156,10 +165,10 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                         className={`w-[50px] h-[50px] rounded-lg bg-white`}
                       >
                         <div
-                          className={`w-[50px] h-[50px] border-[3px] border-black rounded-lg`}
+                          className={`w-[50px] h-[50px] rounded-lg`}
                           style={{
-                            backgroundColor: `#${selectedColor}80`,
-                            border: coloredBorder,
+                            backgroundColor: `#${selectedFillColor}`,
+                            border: `#${selectedBorderColor} 3px solid`,
                           }}
                           onClick={() => setShowColors(true)}
                         />
@@ -177,22 +186,21 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                           }}
                           onClick={() => {
                             setShowColors(false);
-                            setSelectedColor(selectedColor);
+                            setSelectedBorderColor(selectedBorderColor);
                           }}
                         >
                           <div
                             className="w-[50px] h-[50px] rounded-lg"
                             style={{
-                              backgroundColor: `#${selectedColor}80`,
-                              border: coloredBorder,
+                              backgroundColor: `#${selectedFillColor}`,
+                              border: `#${selectedBorderColor} 3px solid`,
                             }}
                             onClick={() => {
                               setShowColors(false);
-                              setSelectedColor(selectedColor);
                             }}
                           />
                         </motion.button>
-                        {colorOptions.map((color) =>
+                        {Object.keys(colorOptions).map((color) =>
                           color != "FFFFFF" ? (
                             <motion.button
                               initial={{ opacity: 0, scale: 0 }}
@@ -201,27 +209,20 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                               whileTap={{ scale: 0.95 }}
                               className="w-[50px] h-[50px] rounded-lg"
                               style={{
-                                backgroundColor: `white`,
+                                backgroundColor: `#${
+                                  colorOptions[
+                                    color as keyof typeof colorOptions
+                                  ]
+                                }`,
+                                border: `solid #${color} 3px`,
                               }}
                               onClick={() => {
                                 setShowColors(false);
-                                setSelectedColor(color);
+                                setSelectedBorderColor(color);
+                                setSelectedFillColorTyped(color);
                               }}
                               key={color}
-                            >
-                              <div
-                                className="w-[50px] h-[50px] rounded-lg"
-                                style={{
-                                  backgroundColor: `#${color}80`,
-                                  border: `solid #${color} 3px`,
-                                }}
-                                onClick={() => {
-                                  setShowColors(false);
-                                  setSelectedColor(color);
-                                }}
-                                key={color}
-                              />
-                            </motion.button>
+                            ></motion.button>
                           ) : (
                             <motion.button
                               whileHover={{ scale: 1.1 }}
@@ -231,7 +232,8 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                               className="w-[50px] h-[50px] border-[3px] border-black rounded-lg bg-white"
                               onClick={() => {
                                 setShowColors(false);
-                                setSelectedColor(color);
+                                setSelectedBorderColor(color);
+                                setSelectedFillColorTyped("FFFFFF");
                               }}
                               key={color}
                             ></motion.button>
@@ -247,7 +249,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                     onClick={() => {
                       addIdea();
                       setIdeaPopup(false);
-                      setSelectedColor("FFFFFF");
+                      setSelectedBorderColor("FFFFFF");
                       setShowColors(false);
                       setIdeaName("");
                     }}
@@ -262,7 +264,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
       </AnimatePresence>
     </motion.div>
   ) : (
-    <div className="h-[96px]">
+    <div className="h-[96px] md:h-0">
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -270,16 +272,29 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
       >
         <h1 className="text-4xl font-extrabold">DevLogs</h1>
         <div className="flex gap-4 items-center justify-center">
-          <button
-            className="text-xl sm:text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3"
-            onClick={() => {
-              setDropdown(false);
-              setPopUpVariant(1);
-              setAuthPopup(true);
-            }}
-          >
-            Sign Up
-          </button>
+          <div className="flex gap-4">
+            <button
+              className="text-xl sm:text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3 md:block hidden"
+              onClick={() => {
+                setDropdown(false);
+                setPopUpVariant(0);
+                setAuthPopup(true);
+              }}
+            >
+              Log In
+            </button>
+            <button
+              className="text-xl sm:text-2xl border-[#CCA8FF] bg-white border-[3px] font-bold rounded-md py-1 px-3"
+              onClick={() => {
+                setDropdown(false);
+                setPopUpVariant(1);
+                setAuthPopup(true);
+              }}
+            >
+              Sign Up
+            </button>
+          </div>
+
           <div className="relative">
             <button
               className="text-5xl md:hidden flex"
