@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { IoMenu } from "react-icons/io5";
 import SignUpLoginForm from "../signUpLoginForm/signUpLoginForm";
 
-function Header({ loggedIn }: { loggedIn: Boolean }) {
+function Header({ loggedIn }: { loggedIn: boolean }) {
   const colorOptions = [
     "FF7EA1",
     "FF9090",

@@ -5,36 +5,36 @@ import CardContainer from "@/components/cardContainer/cardContainer";
 import Header from "@/components/header/header";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebase";
-import IdeaCard from "@/components/ideaCard/ideaCard";
-import styles from "./homePage.module.css";
+// import IdeaCard from "@/components/ideaCard/ideaCard";
+// import styles from "./homePage.module.css";
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null); // Store the user state
   const [loading, setLoading] = useState(true); // Track loading state
 
-  const heroIdeas = [
-    {
-      id: "1",
-      name: "Idea 1",
-      createdAt: "1/1/2024",
-      color: "7BC7FF",
-      notes: [],
-    },
-    {
-      id: "2",
-      name: "Idea 2",
-      createdAt: "1/1/2024",
-      color: "7BC7FF",
-      notes: [],
-    },
-    {
-      id: "3",
-      name: "Idea 3",
-      createdAt: "1/1/2024",
-      color: "7BC7FF",
-      notes: [],
-    },
-  ];
+  // const heroIdeas = [
+  //   {
+  //     id: "1",
+  //     name: "Idea 1",
+  //     createdAt: "1/1/2024",
+  //     color: "7BC7FF",
+  //     notes: [],
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Idea 2",
+  //     createdAt: "1/1/2024",
+  //     color: "7BC7FF",
+  //     notes: [],
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Idea 3",
+  //     createdAt: "1/1/2024",
+  //     color: "7BC7FF",
+  //     notes: [],
+  //   },
+  // ];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
