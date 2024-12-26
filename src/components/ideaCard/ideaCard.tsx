@@ -168,7 +168,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`w-full h-[280px] p-[15px] rounded-[20px] lg:w-fill lg:h-[370px]`}
+      className={`w-full h-[285px] p-[15px] rounded-[20px] lg:w-fill lg:h-[370px]`}
       style={{
         backgroundColor: `#${addMode ? `FFFFFF` : `${fillColor}`}`,
         border: `solid #${borderColor} 4px`,
@@ -390,7 +390,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-[6px] overflow-y-auto h-[73%]">
+      <div className=" overflow-y-auto h-[73%]">
         <AnimatePresence initial={false}>
           {addMode ? (
             <form>
@@ -479,35 +479,38 @@ function IdeaCard({ idea }: { idea: Idea }) {
               </div>
             </form>
           ) : (
-            idea.notes.map((note) => (
-              <div
-                className="bg-white rounded-[10px] flex justify-between p-3 items-center"
-                key={note?.id}
-                style={{
-                  borderLeft: `solid 7px ${getBorderColor(note?.importance)}`,
-                  // borderTop:
-                  //   borderColor === "000000" ? "solid 1px #C2C2C2" : "none",
-                  // borderRight:
-                  //   borderColor === "000000" ? "solid 1px #C2C2C2" : "none",
-                  // borderBottom:
-                  //   borderColor === "000000" ? "solid 1px #C2C2C2" : "none",
-                  boxShadow:
-                    borderColor === "000000"
-                      ? "inset 0px 0px 0px 1px #C2C2C2"
-                      : "none",
-                }}
-              >
-                <p className="font-semibold text-xl">{note?.content}</p>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="text-2xl text-green-600"
-                  onClick={() => removeNote(note)}
-                >
-                  <FaCheck />
-                </motion.button>
-              </div>
-            ))
+            <div className="flex flex-col gap-[6px]">
+              <AnimatePresence initial={false}>
+                {idea.notes.map((note) => (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                    className="bg-white rounded-[10px] flex justify-between p-3 items-center"
+                    key={note?.id}
+                    style={{
+                      borderLeft: `solid 7px ${getBorderColor(
+                        note?.importance
+                      )}`,
+                      boxShadow:
+                        borderColor === "000000"
+                          ? "inset 0px 0px 0px 1px #C2C2C2"
+                          : "none",
+                    }}
+                  >
+                    <p className="font-semibold text-xl">{note?.content}</p>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="text-2xl text-green-600"
+                      onClick={() => removeNote(note)}
+                    >
+                      <FaCheck />
+                    </motion.button>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
           )}
         </AnimatePresence>
       </div>

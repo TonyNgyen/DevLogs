@@ -9,6 +9,8 @@ import { makeid } from "@/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { IoMenu } from "react-icons/io5";
 import SignUpLoginForm from "../signUpLoginForm/signUpLoginForm";
+import { PiUserCircleBold } from "react-icons/pi";
+import { signOut } from "firebase/auth";
 
 function Header({ loggedIn }: { loggedIn: boolean }) {
   const colorOptions = {
@@ -22,15 +24,16 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
     "000000": "FFFFFF",
   };
 
-  const [addPopup, setAddPopup] = useState(false);
+  const [addDropdown, setAddDropdown] = useState(false);
   const [ideaPopUp, setIdeaPopup] = useState(false);
   const [showColors, setShowColors] = useState(false);
   const [selectedBorderColor, setSelectedBorderColor] = useState("000000");
   const [selectedFillColor, setSelectedFillColor] = useState("FFFFFF");
   const [ideaName, setIdeaName] = useState("");
-  const [dropdown, setDropdown] = useState(false);
+  const [authDropdown, setAuthDropdown] = useState(false);
   const [authPopup, setAuthPopup] = useState(false);
   const [popUpVariant, setPopUpVariant] = useState(0);
+  const [userDropdown, setUserDropdown] = useState(false);
 
   const user = auth.currentUser;
 
@@ -67,6 +70,15 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      console.log("User signed out successfully");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return loggedIn ? (
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
@@ -74,39 +86,78 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
       className="bg-[#9E9E9E] bg-opacity-30 border-[4px] border-[#9E9E9E] h-[96px] flex items-center justify-between px-[15px] rounded-[20px] mb-3"
     >
       <h1 className="text-4xl font-extrabold">DevLogs</h1>
-      <div className="relative">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          className="text-5xl"
-          onClick={() => setAddPopup(!addPopup)}
-        >
-          <PiPlusCircleBold />
-        </motion.button>
-        <AnimatePresence initial={false}>
-          {addPopup && (
-            <motion.ul
-              className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
-              style={{ boxShadow: "4px 4px black" }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-            >
-              <li
-                className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
-                onClick={() => {
-                  setIdeaPopup(true);
-                  setAddPopup(false);
-                }}
+      <div className="flex gap-1 justify-center items-center">
+        <div className="relative">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="text-5xl flex md:text-6xl"
+            onClick={() => {
+              setAddDropdown(!addDropdown);
+              setUserDropdown(false);
+            }}
+          >
+            <PiPlusCircleBold />
+          </motion.button>
+          <AnimatePresence initial={false}>
+            {addDropdown && (
+              <motion.ul
+                className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
+                style={{ boxShadow: "4px 4px black" }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
               >
-                Add Idea
-              </li>
-              <li className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer">
-                Add Note
-              </li>
-            </motion.ul>
-          )}
-        </AnimatePresence>
+                <li
+                  className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
+                  onClick={() => {
+                    setIdeaPopup(true);
+                    setAddDropdown(false);
+                  }}
+                >
+                  Add Idea
+                </li>
+                <li className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer">
+                  Add Note
+                </li>
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
+        <div className="relative">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="text-5xl flex md:text-6xl"
+            onClick={() => {
+              setUserDropdown(!userDropdown);
+              setAddDropdown(false);
+            }}
+          >
+            <PiUserCircleBold />
+          </motion.button>
+          <AnimatePresence initial={false}>
+            {userDropdown && (
+              <motion.ul
+                className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
+                style={{ boxShadow: "4px 4px black" }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+              >
+                <li
+                  className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer"
+                  onClick={() => {
+                    setUserDropdown(false);
+                    handleSignOut();
+                  }}
+                >
+                  Sign Out
+                </li>
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
       <AnimatePresence initial={false}>
         {ideaPopUp && (
@@ -276,7 +327,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
             <button
               className="text-xl sm:text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3 md:block hidden"
               onClick={() => {
-                setDropdown(false);
+                setAuthDropdown(false);
                 setPopUpVariant(0);
                 setAuthPopup(true);
               }}
@@ -286,7 +337,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
             <button
               className="text-xl sm:text-2xl border-[#CCA8FF] bg-white border-[3px] font-bold rounded-md py-1 px-3"
               onClick={() => {
-                setDropdown(false);
+                setAuthDropdown(false);
                 setPopUpVariant(1);
                 setAuthPopup(true);
               }}
@@ -298,12 +349,12 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
           <div className="relative">
             <button
               className="text-5xl md:hidden flex"
-              onClick={() => setDropdown(!dropdown)}
+              onClick={() => setAuthDropdown(!authDropdown)}
             >
               <IoMenu />
             </button>
             <AnimatePresence initial={false}>
-              {dropdown && (
+              {authDropdown && (
                 <motion.ul
                   className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
                   style={{ boxShadow: "4px 4px black" }}
@@ -314,7 +365,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                   <li
                     className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
                     onClick={() => {
-                      setDropdown(false);
+                      setAuthDropdown(false);
                       setPopUpVariant(0);
                       setAuthPopup(true);
                     }}
@@ -324,7 +375,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
                   <li
                     className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer"
                     onClick={() => {
-                      setDropdown(false);
+                      setAuthDropdown(false);
                       setPopUpVariant(1);
                       setAuthPopup(true);
                     }}
