@@ -1,7 +1,13 @@
 .group {
   /* ... */
   will-change: transform; /* We should be nice to the browser - let it know what we're going to animate. */
-  animation: scrolling 10s linear infinite;
+  animation: scrolling 20s linear infinite;
+}
+
+.carousel {
+  &:hover .group {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes scrolling {

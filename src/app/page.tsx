@@ -5,36 +5,79 @@ import CardContainer from "@/components/cardContainer/cardContainer";
 import Header from "@/components/header/header";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebase";
-// import IdeaCard from "@/components/ideaCard/ideaCard";
-// import styles from "./homePage.module.css";
+import styles from "./homePage.module.css";
+import IdeaCardHeader from "@/components/ideaCardHeader/ideaCardHeader";
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null); // Store the user state
   const [loading, setLoading] = useState(true); // Track loading state
 
-  // const heroIdeas = [
-  //   {
-  //     id: "1",
-  //     name: "Idea 1",
-  //     createdAt: "1/1/2024",
-  //     color: "7BC7FF",
-  //     notes: [],
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Idea 2",
-  //     createdAt: "1/1/2024",
-  //     color: "7BC7FF",
-  //     notes: [],
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Idea 3",
-  //     createdAt: "1/1/2024",
-  //     color: "7BC7FF",
-  //     notes: [],
-  //   },
-  // ];
+  const heroIdeas = [
+    {
+      id: "1",
+      name: "Idea 1",
+      createdAt: "1/1/2024",
+      borderColor: "FF7EA1",
+      fillColor: "FFBED0",
+      notes: [],
+    },
+    {
+      id: "2",
+      name: "Idea 2",
+      createdAt: "1/1/2024",
+      borderColor: "FF9090",
+      fillColor: "FFC7C7",
+      notes: [],
+    },
+    {
+      id: "3",
+      name: "Idea 3",
+      createdAt: "1/1/2024",
+      borderColor: "FFA656",
+      fillColor: "FFD2AA",
+      notes: [],
+    },
+    {
+      id: "4",
+      name: "Idea 4",
+      createdAt: "1/1/2024",
+      borderColor: "FFD55E",
+      fillColor: "FFEAAE",
+      notes: [],
+    },
+    {
+      id: "5",
+      name: "Idea 5",
+      createdAt: "1/1/2024",
+      borderColor: "61CA68",
+      fillColor: "AFE4B3",
+      notes: [],
+    },
+    {
+      id: "6",
+      name: "Idea 6",
+      createdAt: "1/1/2024",
+      borderColor: "7BC7FF",
+      fillColor: "BCE3FF",
+      notes: [],
+    },
+    {
+      id: "7",
+      name: "Idea 7",
+      createdAt: "1/1/2024",
+      borderColor: "CCA8FF",
+      fillColor: "E5D3FF",
+      notes: [],
+    },
+    {
+      id: "8",
+      name: "Idea 8",
+      createdAt: "1/1/2024",
+      borderColor: "000000",
+      fillColor: "FFFFFF",
+      notes: [],
+    },
+  ];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -71,10 +114,10 @@ export default function Home() {
     <div>
       <Header loggedIn={false} />
       <div className="mb-16 md:mb-0 md:flex md:w-[calc(100vw-40px)] md:h-[calc(100vh-136px)]">
-        <div className="md:w-1/2 flex flex-col md:pl-60 md:justify-center md:h-full">
+        <div className="md:w-[45%] flex flex-col md:pl-60 md:justify-center md:h-full">
           <div
-            className="mt-3 mb-4 md:mt-0 font-bold"
-            style={{ fontSize: "5rem", lineHeight: 1 }}
+            className="mt-3 mb-4 md:mt-0 font-bold text-7xl xl:text-8xl"
+            // style={{ fontSize: "5rem", lineHeight: 1 }}
           >
             <h1>Plan</h1>
             <h1>Organize</h1>
@@ -92,11 +135,30 @@ export default function Home() {
             </button>
           </div>
         </div>
-        {/* <div className="md:w-1/2 h-full mt-12">
-          <div className={`flex my-0 mx-auto overflow-hidden`}>
+        <div className="md:w-[55%] h-full mt-12 md:mt-0 flex flex-col items-center justify-center gap-2 overflow-hidden">
+          <div
+            className={`flex my-0 mx-auto overflow-hidden ${styles.carousel}`}
+          >
             <div className={`flex gap-2 pr-2 ${styles.group}`}>
               {heroIdeas.map((idea) => (
-                <div className="w-[calc(100vw-40px)]">
+                <div className="w-[calc(100vw-40px)] md:w-[430px]">
+                  <IdeaCardHeader idea={idea} key={idea.id} />
+                </div>
+              ))}
+            </div>
+
+            <div className={`flex gap-2 pr-2 ${styles.group}`}>
+              {heroIdeas.map((idea) => (
+                <div className="w-[calc(100vw-40px)] md:w-[430px]">
+                  <IdeaCardHeader idea={idea} key={idea.id + 9} />
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* <div className={`flex my-0 mx-auto overflow-hidden`}>
+            <div className={`flex gap-2 pr-2 ${styles.group}`}>
+              {heroIdeas.map((idea) => (
+                <div className="w-[calc(100vw-40px)] md:w-[430px]">
                   <IdeaCard idea={idea} key={idea.id} />
                 </div>
               ))}
@@ -104,13 +166,13 @@ export default function Home() {
 
             <div className={`flex gap-2 pr-2 ${styles.group}`}>
               {heroIdeas.map((idea) => (
-                <div className="w-[calc(100vw-40px)]">
+                <div className="w-[calc(100vw-40px)] md:w-[430px]">
                   <IdeaCard idea={idea} key={idea.id} />
                 </div>
               ))}
             </div>
-          </div>
-        </div> */}
+          </div> */}
+        </div>
       </div>
     </div>
   );

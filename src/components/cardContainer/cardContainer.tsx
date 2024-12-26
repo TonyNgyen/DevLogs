@@ -6,7 +6,7 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { auth, db } from "@/app/firebase";
 
 interface Note {
-  id: number;
+  id: string;
   content: string;
   importance: number;
   subnotes: Note[];

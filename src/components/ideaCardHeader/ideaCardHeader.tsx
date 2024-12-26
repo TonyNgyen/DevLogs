@@ -35,17 +35,21 @@ interface Idea {
   notes: (Note | null)[];
 }
 
-function IdeaCard({ idea }: { idea: Idea }) {
+function IdeaCardHeader({ idea }: { idea: Idea }) {
   const [addMode, setAddMode] = useState(false);
   const [settingsPopup, setSettingsPopup] = useState(false);
   const [nameChange, setNameChange] = useState(false);
+  const [newIdeaName, setNewIdeaName] = useState("");
   const [ideaName, setIdeaName] = useState(idea.name);
   const [colorChange, setColorChange] = useState(false);
+  const [newBorderColor, setNewBorderColor] = useState(idea.borderColor)
   const [borderColor, setBorderColor] = useState(idea.borderColor);
+  const [newFillColor, setNewFillColor] = useState(idea.fillColor);
   const [fillColor, setFillColor] = useState(idea.fillColor);
   const [noteContent, setNoteContent] = useState("");
   const [emptyNoteError, setEmptyNoteError] = useState(false);
   const [importance, setImportance] = useState(2);
+  const [notes, setNotes] = useState<Note[]>([]);
 
   const importanceStyles =
     "w-1/3 h-[30px] flex justify-center items-center font-semibold text-lg bg-gray-200 border-2 border-black";
@@ -62,24 +66,21 @@ function IdeaCard({ idea }: { idea: Idea }) {
   };
 
   const addNote = async () => {
-    if (!user?.uid) {
-      return;
-    }
     try {
       if (noteContent == "") {
         setEmptyNoteError(true);
         return;
       }
       const noteId = makeid();
-      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
-      await updateDoc(docRef, {
-        notes: arrayUnion({
+      setNotes([
+        ...notes,
+        {
           id: noteId,
           content: noteContent,
           importance: importance,
           subnotes: [],
-        }),
-      });
+        },
+      ]);
       console.log("Value successfully added to array!");
       setImportance(2);
       setNoteContent("");
@@ -89,16 +90,9 @@ function IdeaCard({ idea }: { idea: Idea }) {
     }
   };
 
-  const removeNote = async (noteToRemove: Note | null) => {
-    if (!user?.uid || !idea.id) {
-      console.error("User or idea ID is missing.");
-      return;
-    }
+  const removeNote = (noteId: string) => {
     try {
-      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
-      await updateDoc(docRef, {
-        notes: arrayRemove(noteToRemove),
-      });
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
       console.log("Note removed successfully!");
     } catch (error) {
       console.error("Error removing note:", error);
@@ -106,14 +100,13 @@ function IdeaCard({ idea }: { idea: Idea }) {
   };
 
   const changeName = async () => {
-    if (!user?.uid) {
+    if (newIdeaName === "") {
+      setNameChange(false);
       return;
     }
     try {
-      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
-      await updateDoc(docRef, {
-        name: ideaName,
-      });
+      setIdeaName(newIdeaName);
+      setNewIdeaName("");
       console.log("Idea name successfully changed!");
       setNameChange(false);
     } catch (error) {
@@ -122,33 +115,11 @@ function IdeaCard({ idea }: { idea: Idea }) {
   };
 
   const changeColor = async () => {
-    if (!user?.uid) {
-      return;
-    }
     try {
-      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
-      await updateDoc(docRef, {
-        borderColor: borderColor,
-        fillColor: fillColor,
-      });
       console.log("Idea color successfully changed!");
       setColorChange(false);
     } catch (error) {
       console.error("Error changing idea color:", error);
-    }
-  };
-
-  const deleteIdea = async () => {
-    if (!user?.uid || !idea.id) {
-      console.error("User or idea ID is missing.");
-      return;
-    }
-    try {
-      const docRef = doc(db, "users", user?.uid, "ideas", idea.id);
-      await deleteDoc(docRef);
-      console.log("Idea removed successfully!");
-    } catch (error) {
-      console.error("Error removing idea:", error);
     }
   };
 
@@ -183,8 +154,8 @@ function IdeaCard({ idea }: { idea: Idea }) {
                 name="ideaName"
                 placeholder="Idea Name"
                 className="text-3xl font-bold bg-transparent w-full"
-                value={ideaName}
-                onChange={(e) => setIdeaName(e.target.value)}
+                value={newIdeaName}
+                onChange={(e) => setNewIdeaName(e.target.value)}
               />
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
@@ -194,7 +165,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
             </div>
           ) : (
             <h1 className="text-3xl font-bold">
-              {addMode ? "New Note?" : idea.name}
+              {addMode ? "New Note?" : ideaName}
             </h1>
           )}
         </AnimatePresence>
@@ -233,6 +204,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
               className="text-5xl text-red-600"
               onClick={() => {
                 setNameChange(false);
+                setNewIdeaName("");
                 setIdeaName(idea.name);
               }}
             >
@@ -365,15 +337,6 @@ function IdeaCard({ idea }: { idea: Idea }) {
                     >
                       Change Color
                     </li>
-                    <li
-                      className="text-2xl text-right p-2 font-semibold text-red-600 hover:text-white hover:bg-red-600 cursor-pointer"
-                      onClick={() => {
-                        deleteIdea();
-                        setSettingsPopup(false);
-                      }}
-                    >
-                      Delete Idea
-                    </li>
                   </motion.ul>
                 )}
               </AnimatePresence>
@@ -481,7 +444,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
           ) : (
             <div className="flex flex-col gap-[6px]">
               <AnimatePresence initial={false}>
-                {idea.notes.map((note) => (
+                {notes.map((note) => (
                   <motion.div
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -503,7 +466,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                       className="text-2xl text-green-600"
-                      onClick={() => removeNote(note)}
+                      onClick={() => removeNote(note.id)}
                     >
                       <FaCheck />
                     </motion.button>
@@ -518,4 +481,4 @@ function IdeaCard({ idea }: { idea: Idea }) {
   );
 }
 
-export default IdeaCard;
+export default IdeaCardHeader;

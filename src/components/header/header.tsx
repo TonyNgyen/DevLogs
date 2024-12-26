@@ -335,7 +335,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
               Log In
             </button>
             <button
-              className="text-xl sm:text-2xl border-[#CCA8FF] bg-white border-[3px] font-bold rounded-md py-1 px-3"
+              className="text-xl sm:text-2xl border-[#CCA8FF] bg-[#E5D3FF] md:bg-white border-[3px] font-bold rounded-md py-1 px-3"
               onClick={() => {
                 setAuthDropdown(false);
                 setPopUpVariant(1);
