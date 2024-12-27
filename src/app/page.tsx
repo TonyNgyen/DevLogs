@@ -138,7 +138,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="md:w-[62%] h-full mt-12 md:mt-0 flex flex-col items-center justify-center gap-2 overflow-hidden">
+        <div className="md:w-[62%] h-full mt-12 md:mt-0 flex flex-col items-center justify-center gap-2 overflow-hidden z-0">
           <div
             className={`flex my-0 mx-auto overflow-hidden ${styles.carousel}`}
           >

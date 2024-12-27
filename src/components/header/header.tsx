@@ -356,7 +356,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
             <AnimatePresence initial={false}>
               {authDropdown && (
                 <motion.ul
-                  className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px] z-10"
+                  className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px]"
                   style={{ boxShadow: "4px 4px black" }}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -390,13 +390,13 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
       </motion.div>
       <AnimatePresence initial={true}>
         {authPopup && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <div className="z-50">
             <SignUpLoginForm
               setAuthPopup={setAuthPopup}
               setPopUpVariant={setPopUpVariant}
               popUpVariant={popUpVariant}
             />
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
