@@ -8,14 +8,6 @@ import {
 } from "react-icons/pi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
-import {
-  arrayRemove,
-  arrayUnion,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-import { auth, db } from "@/app/firebase";
 import { makeid } from "@/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -42,9 +34,11 @@ function IdeaCardHeader({ idea }: { idea: Idea }) {
   const [newIdeaName, setNewIdeaName] = useState("");
   const [ideaName, setIdeaName] = useState(idea.name);
   const [colorChange, setColorChange] = useState(false);
-  const [newBorderColor, setNewBorderColor] = useState(idea.borderColor)
+  const [previousBorderColor, setPreviousBorderColor] = useState(
+    idea.borderColor
+  );
   const [borderColor, setBorderColor] = useState(idea.borderColor);
-  const [newFillColor, setNewFillColor] = useState(idea.fillColor);
+  const [previousFillColor, setPreviousFillColor] = useState(idea.fillColor);
   const [fillColor, setFillColor] = useState(idea.fillColor);
   const [noteContent, setNoteContent] = useState("");
   const [emptyNoteError, setEmptyNoteError] = useState(false);
@@ -53,7 +47,6 @@ function IdeaCardHeader({ idea }: { idea: Idea }) {
 
   const importanceStyles =
     "w-1/3 h-[30px] flex justify-center items-center font-semibold text-lg bg-gray-200 border-2 border-black";
-  const user = auth.currentUser;
   const colorOptions = {
     FF7EA1: "FFBED0",
     FF9090: "FFC7C7",
@@ -111,15 +104,6 @@ function IdeaCardHeader({ idea }: { idea: Idea }) {
       setNameChange(false);
     } catch (error) {
       console.error("Error changing idea name:", error);
-    }
-  };
-
-  const changeColor = async () => {
-    try {
-      console.log("Idea color successfully changed!");
-      setColorChange(false);
-    } catch (error) {
-      console.error("Error changing idea color:", error);
     }
   };
 
@@ -230,7 +214,8 @@ function IdeaCardHeader({ idea }: { idea: Idea }) {
                 className="text-5xl text-red-600"
                 onClick={() => {
                   setColorChange(false);
-                  setBorderColor(idea.borderColor);
+                  setBorderColor(previousBorderColor);
+                  setFillColor(previousFillColor);
                 }}
               >
                 <PiXCircleBold />
@@ -293,7 +278,9 @@ function IdeaCardHeader({ idea }: { idea: Idea }) {
               whileTap={{ scale: 0.95 }}
               className="text-5xl text-green-600 "
               onClick={() => {
-                changeColor();
+                setPreviousBorderColor(borderColor);
+                setPreviousFillColor(fillColor);
+                setColorChange(false);
               }}
             >
               <PiCheckCircleBold />

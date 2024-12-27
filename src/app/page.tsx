@@ -141,16 +141,22 @@ export default function Home() {
           >
             <div className={`flex gap-2 pr-2 ${styles.group}`}>
               {heroIdeas.map((idea) => (
-                <div className="w-[calc(100vw-40px)] md:w-[430px]">
-                  <IdeaCardHeader idea={idea} key={idea.id} />
+                <div
+                  className="w-[calc(100vw-40px)] md:w-[430px]"
+                  key={idea.id}
+                >
+                  <IdeaCardHeader idea={idea} />
                 </div>
               ))}
             </div>
 
             <div className={`flex gap-2 pr-2 ${styles.group}`}>
               {heroIdeas.map((idea) => (
-                <div className="w-[calc(100vw-40px)] md:w-[430px]">
-                  <IdeaCardHeader idea={idea} key={idea.id + 9} />
+                <div
+                  className="w-[calc(100vw-40px)] md:w-[430px]"
+                  key={idea.id + 9}
+                >
+                  <IdeaCardHeader idea={idea} />
                 </div>
               ))}
             </div>
