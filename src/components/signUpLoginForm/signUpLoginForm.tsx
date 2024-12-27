@@ -71,7 +71,11 @@ function SignUpLoginForm({
         className="absolute w-full h-full bg-black opacity-50"
         onClick={() => setAuthPopup(false)}
       ></div>
-      <div className="flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex items-center justify-center"
+      >
         <div className="w-[85vw] bg-[#FFFFFF] p-6 rounded-[20px] border-[#FFFFFF] border-4 relative">
           <AnimatePresence initial={false} mode="wait">
             {popUpVariant == 0 ? (
@@ -226,7 +230,7 @@ function SignUpLoginForm({
             </AnimatePresence>
           </form>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
