@@ -76,7 +76,7 @@ function SignUpLoginForm({
         animate={{ opacity: 1, scale: 1 }}
         className="flex items-center justify-center"
       >
-        <div className="w-[85vw] bg-[#FFFFFF] p-6 rounded-[20px] border-[#FFFFFF] border-4 relative">
+        <div className="w-[85vw] sm:w-[400px] bg-[#FFFFFF] p-6 rounded-[20px] border-[#FFFFFF] border-4 relative">
           <AnimatePresence initial={false} mode="wait">
             {popUpVariant == 0 ? (
               <motion.h1
