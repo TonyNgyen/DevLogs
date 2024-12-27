@@ -113,29 +113,32 @@ export default function Home() {
   return (
     <div>
       <Header loggedIn={false} />
-      <div className="mb-16 md:mb-0 md:flex md:w-[calc(100vw-40px)] md:h-[calc(100vh-136px)]">
-        <div className="md:w-[45%] flex flex-col md:pl-60 md:justify-center md:h-full">
-          <div
-            className="mt-3 mb-4 md:mt-0 font-bold text-7xl xl:text-8xl"
-            // style={{ fontSize: "5rem", lineHeight: 1 }}
-          >
-            <h1>Plan</h1>
-            <h1>Organize</h1>
-            <h1>Develop</h1>
-          </div>
-          <h2 className="text-3xl font-semibold mb-3 ">
-            Made easy with DevLogs
-          </h2>
-          <div className="flex gap-4 ">
-            <button className="text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3">
-              Get Started
-            </button>
-            <button className="text-2xl border-[#CCA8FF] border-[3px] font-bold rounded-md py-1 px-3">
-              Learn More
-            </button>
+      <div className="mb-16 md:mb-0 md:flex md:w-[calc(100vw-40px)] md:h-[calc(100vh-136px)] items-center justify-center md:gap-4 lg:gap-0 md:pl-10">
+        <div className="md:w-[50%] md:flex md:items-center md:justify-center">
+          <div className="flex flex-col md:justify-center md:h-full">
+            <div
+              className="mt-3 mb-4 md:mt-0 font-bold text-7xl xl:text-8xl"
+              // style={{ fontSize: "5rem", lineHeight: 1 }}
+            >
+              <h1>Plan</h1>
+              <h1>Organize</h1>
+              <h1>Develop</h1>
+            </div>
+            <h2 className="text-3xl font-semibold mb-3">
+              Made easy with DevLogs
+            </h2>
+            <div className="flex gap-4 ">
+              <button className="text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3">
+                Get Started
+              </button>
+              <button className="text-2xl border-[#CCA8FF] border-[3px] font-bold rounded-md py-1 px-3">
+                Learn More
+              </button>
+            </div>
           </div>
         </div>
-        <div className="md:w-[55%] h-full mt-12 md:mt-0 flex flex-col items-center justify-center gap-2 overflow-hidden">
+
+        <div className="md:w-[62%] h-full mt-12 md:mt-0 flex flex-col items-center justify-center gap-2 overflow-hidden">
           <div
             className={`flex my-0 mx-auto overflow-hidden ${styles.carousel}`}
           >
