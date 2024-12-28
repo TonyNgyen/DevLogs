@@ -7,10 +7,11 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebase";
 import styles from "./homePage.module.css";
 import IdeaCardHeader from "@/components/ideaCardHeader/ideaCardHeader";
+import { motion } from "motion/react";
 
 export default function Home() {
-  const [user, setUser] = useState<User | null>(null); // Store the user state
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const heroIdeas = [
     {
@@ -19,7 +20,33 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "FF7EA1",
       fillColor: "FFBED0",
-      notes: [],
+      notes: [
+        { id: "1", content: "Develop API", importance: 3, subnotes: [] },
+        {
+          id: "2",
+          content: "Fix critical security bugs",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "3",
+          content: "Write unit tests for functions",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "4",
+          content: "Optimize database queries",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "17",
+          content: "Optimize front-end performance",
+          importance: 3,
+          subnotes: [],
+        },
+      ],
     },
     {
       id: "2",
@@ -27,7 +54,38 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "FF9090",
       fillColor: "FFC7C7",
-      notes: [],
+      notes: [
+        {
+          id: "5",
+          content: "Create UI mockups for approval",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "6",
+          content: "Refactor legacy code",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "7",
+          content: "Set up CI/CD pipeline",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "12",
+          content: "Design database schema",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "13",
+          content: "Implement authentication system",
+          importance: 3,
+          subnotes: [],
+        },
+      ],
     },
     {
       id: "3",
@@ -35,7 +93,26 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "FFA656",
       fillColor: "FFD2AA",
-      notes: [],
+      notes: [
+        {
+          id: "8",
+          content: "Add error handling to endpoints",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "9",
+          content: "Research third-party integrations",
+          importance: 1,
+          subnotes: [],
+        },
+        {
+          id: "10",
+          content: "Document codebase for team",
+          importance: 2,
+          subnotes: [],
+        },
+      ],
     },
     {
       id: "4",
@@ -43,7 +120,26 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "FFD55E",
       fillColor: "FFEAAE",
-      notes: [],
+      notes: [
+        {
+          id: "11",
+          content: "Implement dark mode support",
+          importance: 1,
+          subnotes: [],
+        },
+        {
+          id: "19",
+          content: "Implement user profile management",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "20",
+          content: "Explore multi-language support",
+          importance: 1,
+          subnotes: [],
+        },
+      ],
     },
     {
       id: "5",
@@ -51,7 +147,38 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "61CA68",
       fillColor: "AFE4B3",
-      notes: [],
+      notes: [
+        {
+          id: "28",
+          content: "Analyze user feedback for updates",
+          importance: 1,
+          subnotes: [],
+        },
+        {
+          id: "29",
+          content: "Build real-time notifications",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "30",
+          content: "Enhance mobile responsiveness",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "12",
+          content: "Design database schema",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "13",
+          content: "Implement authentication system",
+          importance: 3,
+          subnotes: [],
+        },
+      ],
     },
     {
       id: "6",
@@ -59,7 +186,26 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "7BC7FF",
       fillColor: "BCE3FF",
-      notes: [],
+      notes: [
+        {
+          id: "35",
+          content: "Configure environment variables",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "36",
+          content: "Create test data generators",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "37",
+          content: "Research AI model integration",
+          importance: 1,
+          subnotes: [],
+        },
+      ],
     },
     {
       id: "7",
@@ -67,7 +213,38 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "CCA8FF",
       fillColor: "E5D3FF",
-      notes: [],
+      notes: [
+        {
+          id: "44",
+          content: "Review application security policies",
+          importance: 3,
+          subnotes: [],
+        },
+        {
+          id: "45",
+          content: "Prototype new feature ideas",
+          importance: 1,
+          subnotes: [],
+        },
+        {
+          id: "46",
+          content: "Improve error message clarity",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "30",
+          content: "Enhance mobile responsiveness",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "31",
+          content: "Develop backup and restore features",
+          importance: 3,
+          subnotes: [],
+        },
+      ],
     },
     {
       id: "8",
@@ -75,7 +252,20 @@ export default function Home() {
       createdAt: "1/1/2024",
       borderColor: "000000",
       fillColor: "FFFFFF",
-      notes: [],
+      notes: [
+        {
+          id: "41",
+          content: "Add accessibility features",
+          importance: 2,
+          subnotes: [],
+        },
+        {
+          id: "42",
+          content: "Monitor server performance",
+          importance: 3,
+          subnotes: [],
+        },
+      ],
     },
   ];
 
@@ -128,20 +318,26 @@ export default function Home() {
               Made easy with DevLogs
             </h2>
             <div className="flex gap-4 ">
-              <button className="text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3"
+              >
                 Get Started
-              </button>
-              <button className="text-2xl border-[#CCA8FF] border-[3px] font-bold rounded-md py-1 px-3">
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="text-2xl border-[#CCA8FF] border-[3px] font-bold rounded-md py-1 px-3"
+              >
                 Learn More
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
 
         <div className="md:w-[62%] h-full mt-12 md:mt-0 flex flex-col items-center justify-center gap-2 overflow-hidden z-0">
-          <div
-            className={`flex my-0 mx-auto overflow-hidden ${styles.carousel}`}
-          >
+          <div className={`flex my-0 mx-auto ${styles.carousel}`}>
             <div className={`flex gap-2 pr-2 ${styles.group}`}>
               {heroIdeas.map((idea) => (
                 <div

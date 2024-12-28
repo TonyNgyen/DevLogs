@@ -43,7 +43,9 @@ function IdeaCardHeader({ idea }: { idea: Idea }) {
   const [noteContent, setNoteContent] = useState("");
   const [emptyNoteError, setEmptyNoteError] = useState(false);
   const [importance, setImportance] = useState(2);
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<Note[]>(
+    idea.notes.filter((note): note is Note => note !== null)
+  );
 
   const importanceStyles =
     "w-1/3 h-[30px] flex justify-center items-center font-semibold text-lg bg-gray-200 border-2 border-black";
@@ -123,6 +125,7 @@ function IdeaCardHeader({ idea }: { idea: Idea }) {
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ scale: 1.02 }}
       className={`w-full h-[285px] p-[15px] rounded-[20px] lg:w-fill lg:h-[370px]`}
       style={{
         backgroundColor: `#${addMode ? `FFFFFF` : `${fillColor}`}`,

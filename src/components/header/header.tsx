@@ -319,12 +319,14 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-[#9E9E9E] bg-opacity-30 border-[4px]  h-[96px] flex items-center justify-between px-[15px] mb-3 absolute top-0 left-0 w-screen z-30"
+        className="bg-[#9E9E9E] bg-opacity-30 border-[4px] h-[96px] flex items-center justify-between mb-3 px-[31px] absolute top-0 left-0 w-screen z-30"
       >
         <h1 className="text-4xl font-extrabold">DevLogs</h1>
-        <div className="flex gap-4 items-center justify-center">
+        <div className="">
           <div className="flex gap-4">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               className="text-xl sm:text-2xl border-[#CCA8FF] bg-[#E5D3FF] border-[3px] font-bold rounded-md py-1 px-3 md:block hidden cursor-pointer"
               onClick={() => {
                 setAuthDropdown(false);
@@ -333,8 +335,10 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
               }}
             >
               Log In
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               className="text-xl sm:text-2xl border-[#CCA8FF] bg-[#E5D3FF] md:bg-white border-[3px] font-bold rounded-md py-1 px-3"
               onClick={() => {
                 setAuthDropdown(false);
@@ -343,7 +347,7 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
               }}
             >
               Sign Up
-            </button>
+            </motion.button>
           </div>
 
           <div className="relative">
