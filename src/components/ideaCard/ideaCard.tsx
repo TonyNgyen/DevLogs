@@ -59,6 +59,7 @@ function IdeaCard({ idea }: { idea: Idea }) {
     "7BC7FF": "BCE3FF",
     CCA8FF: "E5D3FF",
     "000000": "FFFFFF",
+    custom: "custom",
   };
 
   const addNote = async () => {
@@ -272,44 +273,112 @@ function IdeaCard({ idea }: { idea: Idea }) {
                     className="absolute bg-white w-44 right-0 top-[3.2rem] rounded-lg border-black border-[3px] z-20 grid grid-cols-3 grid-rows-3 gap-2 p-2"
                     style={{ boxShadow: "4px 4px black" }}
                   >
-                    {Object.keys(colorOptions).map((color) =>
-                      color != "000000" ? (
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          initial={{ opacity: 0, scale: 0 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="w-fill aspect-square rounded-lg"
-                          style={{
-                            backgroundColor: `#${
-                              colorOptions[color as keyof typeof colorOptions]
-                            }`,
-                            border: `solid #${color} 3px`,
-                          }}
-                          onClick={() => {
-                            setBorderColor(color);
-                            setFillColor(
-                              colorOptions[color as keyof typeof colorOptions]
-                            );
-                          }}
-                          key={color}
-                        ></motion.button>
-                      ) : (
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          initial={{ opacity: 0, scale: 0 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="w-fill aspect-square border-[3px] border-black rounded-lg bg-white"
-                          onClick={() => {
-                            setBorderColor(color);
-                            setFillColor(
-                              colorOptions[color as keyof typeof colorOptions]
-                            );
-                          }}
-                          key={color}
-                        ></motion.button>
-                      )
+                    {Object.keys(colorOptions).map(
+                      (color) => {
+                        if (color == "custom") {
+                          return (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="w-fill aspect-square border-[3px] border-black rounded-lg bg-red-200"
+                              onClick={() => {
+                                setBorderColor(color);
+                                setFillColor(
+                                  colorOptions[
+                                    color as keyof typeof colorOptions
+                                  ]
+                                );
+                              }}
+                              key={color}
+                            ></motion.button>
+                          );
+                        } else if (color == "000000") {
+                          return (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="w-fill aspect-square border-[3px] border-black rounded-lg bg-white"
+                              onClick={() => {
+                                setBorderColor(color);
+                                setFillColor(
+                                  colorOptions[
+                                    color as keyof typeof colorOptions
+                                  ]
+                                );
+                              }}
+                              key={color}
+                            ></motion.button>
+                          );
+                        } else {
+                          return (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="w-full aspect-square rounded-lg"
+                              style={{
+                                backgroundColor: `#${
+                                  colorOptions[
+                                    color as keyof typeof colorOptions
+                                  ]
+                                }`,
+                                border: `solid #${color} 3px`,
+                              }}
+                              onClick={() => {
+                                setBorderColor(color);
+                                setFillColor(
+                                  colorOptions[
+                                    color as keyof typeof colorOptions
+                                  ]
+                                );
+                              }}
+                              key={color}
+                            ></motion.button>
+                          );
+                        }
+                      }
+                      // color != "000000" ? (
+                      // <motion.button
+                      //   whileHover={{ scale: 1.1 }}
+                      //   whileTap={{ scale: 0.95 }}
+                      //   initial={{ opacity: 0, scale: 0 }}
+                      //   animate={{ opacity: 1, scale: 1 }}
+                      //   className="w-fill aspect-square rounded-lg"
+                      //   style={{
+                      //     backgroundColor: `#${
+                      //       colorOptions[color as keyof typeof colorOptions]
+                      //     }`,
+                      //     border: `solid #${color} 3px`,
+                      //   }}
+                      //   onClick={() => {
+                      //     setBorderColor(color);
+                      //     setFillColor(
+                      //       colorOptions[color as keyof typeof colorOptions]
+                      //     );
+                      //   }}
+                      //   key={color}
+                      // ></motion.button>
+                      // ) : (
+                      // <motion.button
+                      //   whileHover={{ scale: 1.1 }}
+                      //   whileTap={{ scale: 0.95 }}
+                      //   initial={{ opacity: 0, scale: 0 }}
+                      //   animate={{ opacity: 1, scale: 1 }}
+                      //   className="w-fill aspect-square border-[3px] border-black rounded-lg bg-white"
+                      //   onClick={() => {
+                      //     setBorderColor(color);
+                      //     setFillColor(
+                      //       colorOptions[color as keyof typeof colorOptions]
+                      //     );
+                      //   }}
+                      //   key={color}
+                      // ></motion.button>
+                      // )
                     )}
                   </motion.div>
                 )}
