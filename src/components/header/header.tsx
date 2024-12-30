@@ -348,47 +348,46 @@ function Header({ loggedIn }: { loggedIn: boolean }) {
             >
               Sign Up
             </motion.button>
-          </div>
-
-          <div className="relative">
-            <button
-              className="text-5xl md:hidden flex"
-              onClick={() => setAuthDropdown(!authDropdown)}
-            >
-              <IoMenu />
-            </button>
-            <AnimatePresence initial={false}>
-              {authDropdown && (
-                <motion.ul
-                  className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px]"
-                  style={{ boxShadow: "4px 4px black" }}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0 }}
-                >
-                  <li
-                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
-                    onClick={() => {
-                      setAuthDropdown(false);
-                      setPopUpVariant(0);
-                      setAuthPopup(true);
-                    }}
+            <div className="relative">
+              <button
+                className="text-5xl md:hidden flex"
+                onClick={() => setAuthDropdown(!authDropdown)}
+              >
+                <IoMenu />
+              </button>
+              <AnimatePresence initial={false}>
+                {authDropdown && (
+                  <motion.ul
+                    className="absolute bg-white w-36 right-0 rounded-lg border-black border-[3px]"
+                    style={{ boxShadow: "4px 4px black" }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
                   >
-                    Log in
-                  </li>
-                  <li
-                    className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer"
-                    onClick={() => {
-                      setAuthDropdown(false);
-                      setPopUpVariant(1);
-                      setAuthPopup(true);
-                    }}
-                  >
-                    Sign up
-                  </li>
-                </motion.ul>
-              )}
-            </AnimatePresence>
+                    <li
+                      className="text-2xl text-right p-2 hover:text-gray-400 font-semibold border-b-2 border-black cursor-pointer"
+                      onClick={() => {
+                        setAuthDropdown(false);
+                        setPopUpVariant(0);
+                        setAuthPopup(true);
+                      }}
+                    >
+                      Log in
+                    </li>
+                    <li
+                      className="text-2xl text-right p-2 hover:text-gray-400 font-semibold cursor-pointer"
+                      onClick={() => {
+                        setAuthDropdown(false);
+                        setPopUpVariant(1);
+                        setAuthPopup(true);
+                      }}
+                    >
+                      Sign up
+                    </li>
+                  </motion.ul>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </motion.div>
