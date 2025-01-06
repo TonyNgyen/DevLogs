@@ -462,11 +462,11 @@ function IdeaCard({ idea }: { idea: Idea }) {
       <div className=" overflow-y-auto h-[73%]">
         <AnimatePresence initial={false}>
           {addMode ? (
-            <form>
+            <form className="flex flex-col gap-2 h-full">
               <motion.textarea
                 whileTap={{ scale: 0.98 }}
                 rows={2}
-                className={`border-[2px] rounded-lg p-3 w-full font-bold text-lg ${
+                className={`border-[2px] flex-grow rounded-lg p-3 w-full font-bold text-lg ${
                   emptyNoteError
                     ? " border-red-600 placeholder-red-600"
                     : " border-black "
@@ -482,69 +482,71 @@ function IdeaCard({ idea }: { idea: Idea }) {
                   setEmptyNoteError(false);
                 }}
               />
-
-              <h2 className="text-2xl font-semibold">Importance</h2>
-              <div className="flex">
-                <button
-                  type="button"
-                  className={`${importanceStyles} rounded-l-lg`}
-                  style={{
-                    background:
-                      importance == 1
-                        ? `#${borderColor}80`
-                        : "rgb(229 231 235)",
-                    border: `${
-                      borderColor == "000000"
-                        ? " solid 2px black "
-                        : importance == 1
-                        ? ` none `
-                        : " solid 2px black "
-                    }`,
-                  }}
-                  onClick={() => setImportance(1)}
-                >
-                  Low
-                </button>
-                <button
-                  type="button"
-                  className={`${importanceStyles} `}
-                  style={{
-                    background:
-                      importance == 2
-                        ? `#${borderColor}BF`
-                        : "rgb(229 231 235)",
-                    border: `${
-                      borderColor == "000000"
-                        ? " solid 2px black "
-                        : importance == 2
-                        ? ` none `
-                        : "solid 2px black "
-                    }`,
-                  }}
-                  onClick={() => setImportance(2)}
-                >
-                  Medium
-                </button>
-                <button
-                  type="button"
-                  className={`${importanceStyles} rounded-r-lg`}
-                  style={{
-                    background:
-                      importance == 3
-                        ? `#${borderColor}FF`
-                        : "rgb(229 231 235)",
-                    border: `${
-                      borderColor == "000000"
-                        ? " solid 2px black "
-                        : importance == 3
-                        ? ` none `
-                        : " solid 2px black "
-                    }`,
-                  }}
-                  onClick={() => setImportance(3)}
-                >
-                  High
-                </button>
+              <div>
+                {" "}
+                <h2 className="text-2xl font-semibold">Importance</h2>
+                <div className="flex">
+                  <button
+                    type="button"
+                    className={`${importanceStyles} rounded-l-lg`}
+                    style={{
+                      background:
+                        importance == 1
+                          ? `#${borderColor}80`
+                          : "rgb(229 231 235)",
+                      border: `${
+                        borderColor == "000000"
+                          ? " solid 2px black "
+                          : importance == 1
+                          ? ` none `
+                          : " solid 2px black "
+                      }`,
+                    }}
+                    onClick={() => setImportance(1)}
+                  >
+                    Low
+                  </button>
+                  <button
+                    type="button"
+                    className={`${importanceStyles} `}
+                    style={{
+                      background:
+                        importance == 2
+                          ? `#${borderColor}BF`
+                          : "rgb(229 231 235)",
+                      border: `${
+                        borderColor == "000000"
+                          ? " solid 2px black "
+                          : importance == 2
+                          ? ` none `
+                          : "solid 2px black "
+                      }`,
+                    }}
+                    onClick={() => setImportance(2)}
+                  >
+                    Medium
+                  </button>
+                  <button
+                    type="button"
+                    className={`${importanceStyles} rounded-r-lg`}
+                    style={{
+                      background:
+                        importance == 3
+                          ? `#${borderColor}FF`
+                          : "rgb(229 231 235)",
+                      border: `${
+                        borderColor == "000000"
+                          ? " solid 2px black "
+                          : importance == 3
+                          ? ` none `
+                          : " solid 2px black "
+                      }`,
+                    }}
+                    onClick={() => setImportance(3)}
+                  >
+                    High
+                  </button>
+                </div>
               </div>
             </form>
           ) : (
