@@ -574,7 +574,10 @@ function IdeaCard({ idea }: { idea: Idea }) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                       className="text-2xl text-green-600"
-                      onClick={() => removeNote(note)}
+                      onClick={() => {
+                        removeNote(note);
+                        setSettingsPopup(false);
+                      }}
                     >
                       <FaCheck />
                     </motion.button>
